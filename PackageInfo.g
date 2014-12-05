@@ -1,14 +1,29 @@
 SetPackageInfo( rec(
 
-PackageName := "gap4ti2",
-Subtitle := "4ti2 interface for GAP",
+PackageName := "4ti2gap",
+Subtitle := "GAP wraper for 4ti2",
 Version := "0.0.1",
-Date    := "22/11/2014", # dd/mm/yyyy format
+Date    := "05/12/2014", # dd/mm/yyyy format
 
 Persons := [
   rec(
     LastName      := "",
-    FirstNames    := "",
+    FirstNames    := "Alfredo",
+    IsAuthor      := true,
+    IsMaintainer  := true,
+    Email         := "@",
+    WWWHome       := "",
+    PostalAddress := Concatenation(
+                       "\n",
+                       "\n",
+                       "\n",
+                       "" ),
+    Place         := "",
+    Institution   := ""
+  ),
+  rec(
+    LastName      := "",
+    FirstNames    := "Pedro",
     IsAuthor      := true,
     IsMaintainer  := true,
     Email         := "@",
@@ -60,8 +75,8 @@ Dependencies := rec(
 AvailabilityTest := function()
     local path;
     # test for existence of the compiled binary
-    path := DirectoriesPackagePrograms("gap4ti2");
-    if not "gap4ti2" in SHOW_STAT() and
+    path := DirectoriesPackagePrograms("4ti2gap");
+    if not "4ti2gap" in SHOW_STAT() and
        Filename(path, "gap4ti2.so") = fail then
       return fail;
     fi;
