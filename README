@@ -1,0 +1,60 @@
+The GAP 4 package 'NormalizInterface'
+=====================================
+
+1 Package description
+=====================
+
+Normaliz is a software for computations with rational cones and affine
+monoids. It pursues two main computational goals: finding the Hilbert
+basis, a minimal generating system of the monoid of lattice points of a
+cone; and counting elements degree-wise in a generating function, the
+Hilbert series.
+As a recent extension, Normaliz can handle unbounded polyhedra. The
+Hilbert basis computation can be considered as solving a linear
+diophantine system of inhomogeneous equations, inequalities and
+congruences.
+
+This package encapsulates a libnormaliz cone and gives access to it in the
+GAP enviroment. In this way GAP can be used as interactive interface to
+libnormaliz.
+
+For more information on Normaliz visit www.math.uos.de/normaliz and
+especially have a look at the manual.
+
+
+2 Installation preparation
+==========================
+
+You should use the same gmp version for GAP and libnormaliz. To ensure
+this you can use a system installed gmp for GAP by configuring it with
+
+    ./configure --with-gmp=system
+
+and build it. Next you need Normaliz, the easiest way is to clone the master
+branch from the Normaliz github repository with the command
+
+    git clone https://github.com/csoeger/Normaliz Normaliz.git
+
+into this directory. After that you can run the script "build-normaliz.sh".
+Once it completed successfully, you can then build NormalizInterface
+like this:
+
+    ./autogen.sh (need autoconf and automake) (only for developers? TODO)
+    ./configure --with-gaproot=GAPDIR --with-normaliz=$PWD/Normaliz.git/DST
+    make
+
+If you need to customize the normaliz compilation have a look at
+Normaliz.git/source/INSTALL. Remember to use the same compiler and gmp
+version as for GAP.
+
+
+3 Documentation and tests
+=========================
+
+Generate the documentation:
+(The documentation is still incomplete.)
+    make doc
+
+run automatic tests:
+    make check
+    gap maketest.g

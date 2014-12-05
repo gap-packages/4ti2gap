@@ -1,0 +1,93 @@
+dnl ##
+dnl ## Process this file with autoconf to produce a configure script.
+dnl ## 
+
+dnl ##
+dnl ## Setup autoconf
+dnl ##
+AC_PREREQ([2.68])
+AC_INIT([gap4ti2], m4_esyscmd([tr -d '\n' < VERSION]))
+AC_CONFIG_SRCDIR([src/gap4ti2.cc])
+AC_CONFIG_HEADER([src/pkgconfig.h:cnf/pkgconfig.h.in])
+AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_AUX_DIR([cnf])
+
+dnl ##
+dnl ## Get canonical host info
+dnl ##
+AC_CANONICAL_HOST
+
+dnl ##
+dnl ## Setup automake
+dnl ##
+AM_INIT_AUTOMAKE([1.11 -Wall foreign subdir-objects])
+AM_SILENT_RULES([yes])
+AM_PROG_AR
+
+dnl ##
+dnl ## C++ is the language
+dnl ##
+AC_PROG_CXX
+AC_LANG([C++])
+AX_CHECK_COMPILE_FLAG([-std=c++0x], [CXXFLAGS="$CXXFLAGS -std=c++0x"])
+
+dnl ##
+dnl ## Setup libtool (for building the GAP kernel extension)
+dnl ##
+LT_PREREQ([2.4.2])
+LT_INIT([disable-static dlopen win32-dll])
+
+dnl ##
+dnl ## Locate the GAP root dir
+dnl ##
+AC_FIND_GAP
+
+dnl ##
+dnl ## Locate 4ti2
+dnl ##
+
+AC_ARG_WITH([4ti2],
+    [AC_HELP_STRING([--with-4ti2=<path>], [specify root of 4ti2 installation])],
+    [FTIT="$with_4ti2"],
+    [AC_MSG_ERROR([Must use --with-4ti2])]
+)
+
+echo "hola $with_4ti2"
+
+FTIT_CPPFLAGS="-I$FTIT/include"
+FTIT_LDPATH="$FTIT/lib"
+FTIT_LDFLAGS="-L$FTIT_LDPATH"
+AC_SUBST(FTIT_LDFLAGS)
+AC_SUBST(FTIT_LDPATH)
+AC_SUBST(FTIT_CPPFLAGS)
+
+dnl ##
+dnl ## Locate 4ti2
+dnl ##
+LB_CHECK_GMP(,,[AC_MSG_WARN([GNU MP not found.
+4ti2 will be built without support for arbitrary-precision computations.])])
+
+dnl ##
+dnl ## Detect pointer size to distinguish 32 and 64 bit builds
+dnl ##
+AC_CHECK_SIZEOF([void **])
+
+dnl ##
+dnl ## Detect Windows resp. Cygwin
+dnl ##
+case $host_os in
+  *cygwin* ) CYGWIN=yes;;
+         * ) CYGWIN=no;;
+esac
+AM_CONDITIONAL([SYS_IS_CYGWIN], [test "$CYGWIN" = "yes"])
+if test "$CYGWIN" = "yes"; then
+  AC_DEFINE(SYS_IS_CYGWIN32, 1, are we on CYGWIN?)
+else
+  AC_DEFINE(SYS_IS_CYGWIN32, 0, are we on CYGWIN?)
+fi
+
+dnl ##
+dnl ## Finally, generate the Makefiles and output everything
+dnl ##
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT

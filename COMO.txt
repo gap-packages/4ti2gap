@@ -1,0 +1,40 @@
+Lo que he hecho en mi directorio:
+
+Para compilar gap4 en zorro dentro de la carpeta ~/lib/gap4r7 :
+
+./configure --with-gmp=yes
+
+make
+
+-------
+después 4ti2:
+
+./configure --enable-shared --prefix=/home/alfredo/lib/4ti2-1.6.2 --with-gmp=/home/alfredo/lib/gap4r7/bin/x86_64-unknown-linux-gnu-gcc-default64/extern/gmp-5.0.5
+
+make
+
+make install
+
+-------
+copie gap4ti2 a la carpeta pkg de gap4r7 y después escribí en su carpeta:
+
+autoreconf
+
+./configure --with-gaproot=/home/alfredo/lib/gap4r7 --with-4ti2=/home/alfredo/lib/4ti2-1.6.2
+
+make
+
+-------
+
+~/lib/gap4r7/bin/gap.sh
+
+gap> LoadPackage("gap4ti2");
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Loading  gap4ti2 0.0.1
+by   ().
+Homepage: 
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+true
+gap> _4ti2_GroebnerBasis([[1, 1, -1, 1],[1, 5, 10, 25]]);
+[ [ -10, 5, -4, 1 ], [ -5, -1, -4, 2 ], [ -5, 6, 0, -1 ] ]
+
