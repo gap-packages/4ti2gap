@@ -1,8 +1,14 @@
 /* src/pkgconfig.h.  Generated from pkgconfig.h.in by configure.  */
 /* cnf/pkgconfig.h.in.  Generated from configure.ac by autoheader.  */
 
+/* Define if GMP is version 3.xxx */
+/* #undef GMP_VERSION_3 */
+
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #define HAVE_DLFCN_H 1
+
+/* Define if GMP is installed */
+#define HAVE_GMP 1
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
@@ -45,7 +51,7 @@
 #define PACKAGE_NAME "gap4ti2"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "gap4ti2 0.2"
+#define PACKAGE_STRING "gap4ti2 0.0.1"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "gap4ti2"
@@ -54,7 +60,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.2"
+#define PACKAGE_VERSION "0.0.1"
 
 /* The size of `void **', as computed by sizeof. */
 #define SIZEOF_VOID_PP 8
@@ -66,4 +72,4 @@
 #define SYS_IS_CYGWIN32 0
 
 /* Version number of package */
-#define VERSION "0.2"
+#define VERSION "0.0.1"

@@ -1,2 +1,2 @@
-ReadPackage("gap4ti2", "lib/groebner.gi");
+ReadPackage("4ti2gap", "lib/groebner.gi");
 

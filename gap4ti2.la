@@ -8,16 +8,16 @@
 dlname='gap4ti2.so'
 
 # Names of this library.
-library_names='gap4ti2.so gap4ti2.so'
+library_names='gap4ti2.so gap4ti2.so gap4ti2.so'
 
 # The name of the static archive.
 old_library=''
 
 # Linker flags that can not go in dependency_libs.
-inherited_linker_flags=' '
+inherited_linker_flags=''
 
 # Libraries that this one depends upon.
-dependency_libs=' -R/Users/pedro/4ti2-1.6.2/lib -R/usr/local/lib  -L/Users/pedro/4ti2-1.6.2/lib -L../4ti2 /usr/local/lib/lib4ti2common.la -L/opt/local/lib -lglpk -lgmp /usr/local/lib/libglpk.la -lm -lgmpxx /usr/local/lib/libgmp.la'
+dependency_libs=' -L/home/pedro/Instalar/4ti2/lib /home/pedro/Instalar/4ti2/lib/lib4ti2int64.la -L../4ti2 /home/pedro/Instalar/4ti2/lib/lib4ti2common.la -lglpk -lgmpxx -lgmp'
 
 # Names of additional weak libraries provided by this library
 weak_library_names=''
