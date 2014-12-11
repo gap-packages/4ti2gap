@@ -4,12 +4,49 @@ The GAP 4 package '4ti2gap'
 1 Package description
 =====================
 
+This package intends to use the tools included in 4ti2 from the gap shell. 
 
 
 2 Installation preparation
 ==========================
 
+4ti2 must be compiled with --enable-shared
+It works if gap is compiled with its own gmp and then 4ti2gap is compiled using --with-gmp pointing to gap's gmp
+
+So the best way to get it working is the following. Compile gap with
+
+./configure --with-gmp=yes
+make
+
+Then compile 4ti2 with
+./configure --enable-shared --prefix=whereyouwanttoinstall4ti2 --with-gmp=gaphomedit/bin/xBLABLABLA/extern/gmp-5.0.5
+
+make
+make install
+
+Finally go to 4ti2gap folder and do
+
+./configure --with-gaproot=whereyouinstalledgap --with-4ti2=whereyouinstalled4ti2
+
+make
 
 3 Documentation and tests
 =========================
+
+So far only groebner is included, and it is called in the following way
+
+GroebnerBasis4ti2( matrix , order ), where matrix is a matrix with integer entries and order is either an order matrix or "lex", "grlex" "grevlex".
+
+
+gap> GroebnerBasis4ti2([[3,5,7]],[[3,5,7]]);
+[ [ -4, 1, 1 ], [ -3, -1, 2 ], [ -1, 2, -1 ] ]
+gap> GroebnerBasis4ti2([[3,5,7]],"lex");    
+[ [ 0, 7, -5 ], [ 1, -2, 1 ], [ 1, 5, -4 ], [ 2, 3, -3 ], [ 3, 1, -2 ], 
+  [ 4, -1, -1 ] ]
+gap> GroebnerBasis4ti2([[3,5,7]],"grevlex");
+[ [ -1, 2, -1 ], [ 3, 1, -2 ], [ 4, -1, -1 ] ]
+gap> GroebnerBasis4ti2([[3,5,7]],"grlex");  
+[ [ 0, 7, -5 ], [ 1, -2, 1 ], [ 1, 5, -4 ], [ 2, 3, -3 ], [ 3, 1, -2 ], 
+  [ 4, -1, -1 ] ]
+gap> 
 
