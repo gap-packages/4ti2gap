@@ -11,17 +11,21 @@ This package intends to use the tools included in 4ti2 from the gap shell.
 ==========================
 
 4ti2 must be compiled with --enable-shared
+
 It works if gap is compiled with its own gmp and then 4ti2gap is compiled using --with-gmp pointing to gap's gmp
 
 So the best way to get it working is the following. Compile gap with
 
 ./configure --with-gmp=yes
+
 make
 
 Then compile 4ti2 with
+
 ./configure --enable-shared --prefix=whereyouwanttoinstall4ti2 --with-gmp=gaphomedit/bin/xBLABLABLA/extern/gmp-5.0.5
 
 make
+
 make install
 
 Finally go to 4ti2gap folder and do
