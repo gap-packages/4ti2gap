@@ -6,5 +6,6 @@
 // }
 
 Obj _4ti2_GroebnerBasis( Obj self, Obj listA );
+Obj _4ti2_Hilbert( Obj self, Obj list );
 
 #endif

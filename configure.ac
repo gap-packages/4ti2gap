@@ -6,8 +6,8 @@ dnl ##
 dnl ## Setup autoconf
 dnl ##
 AC_PREREQ([2.68])
-AC_INIT([gap4ti2], m4_esyscmd([tr -d '\n' < VERSION]))
-AC_CONFIG_SRCDIR([src/gap4ti2.cc])
+AC_INIT([4ti2gap], m4_esyscmd([tr -d '\n' < VERSION]))
+AC_CONFIG_SRCDIR([src/4ti2gap.cc])
 AC_CONFIG_HEADER([src/pkgconfig.h:cnf/pkgconfig.h.in])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([cnf])

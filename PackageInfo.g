@@ -1,27 +1,14 @@
 SetPackageInfo( rec(
+
 PackageName := "4ti2gap",
 Subtitle := "GAP wraper for 4ti2",
 Version := "0.0.1",
 Date    := "05/12/2014", # dd/mm/yyyy format
+
 Persons := [
   rec(
     LastName      := "",
-    FirstNames    := "Alfredo",
-    IsAuthor      := true,
-    IsMaintainer  := true,
-    Email         := "@",
-    WWWHome       := "",
-    PostalAddress := Concatenation(
-                       "\n",
-                       "\n",
-                       "\n",
-                       "" ),
-    Place         := "",
-    Institution   := ""
-  ),
-  rec(
-    LastName      := "",
-    FirstNames    := "Pedro",
+    FirstNames    := "",
     IsAuthor      := true,
     IsMaintainer  := true,
     Email         := "@",
@@ -45,21 +32,21 @@ PackageWWWHome := "",
 #ArchiveFormats := ".tar.gz tar.bz2",
 #ArchiveURL     := Concatenation("",
 #                                "releases/download/v", ~.Version,
-#                                "/gap4ti2-", ~.Version),
+#                                "/4ti2gap-", ~.Version),
 #README_URL     := Concatenation( ~.PackageWWWHome, "README" ),
 #PackageInfoURL := Concatenation( ~.PackageWWWHome, "PackageInfo.g" ),
 
 #AbstractHTML   := Concatenation(
-#               "The NormalizInterface Package ... ",
+#               "The 4ti2gap Package ... ",
 #               "TODO"),
 
 #PackageDoc := rec(
-#  BookName  := "NormalizInterface",
+#  BookName  := "4ti2gap",
 #  ArchiveURLSubset := [ "doc" ],
 #  HTMLStart := "doc/chap0_mj.html",
 #  PDFFile   := "doc/manual.pdf",
 #  SixFile   := "doc/manual.six",
-#  LongTitle := "GAP wrapper for normaliz",
+#  LongTitle := "GAP wrapper for 4ti2",
 #  Autoload  := true
 #),
 
@@ -75,7 +62,7 @@ AvailabilityTest := function()
     # test for existence of the compiled binary
     path := DirectoriesPackagePrograms("4ti2gap");
     if not "4ti2gap" in SHOW_STAT() and
-       Filename(path, "gap4ti2.so") = fail then
+       Filename(path, "4ti2gap.so") = fail then
       return fail;
     fi;
     return true;
@@ -85,7 +72,8 @@ Autoload := false,
 
 Keywords := [
   "4ti2",
-  "groebner"
+  "groebner",
+  "hilbert",
 ],
 
 #TestFile := "tst/testall.g",

@@ -1,7 +1,8 @@
 #include <iostream>
 #include <sstream>
+#include <cstring>
 
-#include "gap4ti2.h"
+#include "4ti2gap.h"
 
 #include "groebner/Globals.h"
 #include "groebner/VectorArray.h"
@@ -12,6 +13,9 @@
 #include "groebner/GroebnerBasis.h"
 #include "groebner/DataType.h"
 #include "groebner/BasicOptions.h"
+
+#include "zsolve/VectorArrayAPI.hpp"
+#include "zsolve/HilbertAPI.hpp"
 
 bool GAPInt2IntegerType( Obj ival, IntegerType& oval )
 {
@@ -36,11 +40,29 @@ void GAPMatrix2VectorArray( Obj listA, _4ti2_::VectorArray &A )
     }
 }
 
-//Obj OrderMatrix( Obj order )
-//{
-//    if ( !IS_STRING_REP(order) ) {
-//    }
-//}
+bool GAPMatrix2StdString( Obj listA, std::string& thst )
+{
+    size_t numRows = LEN_PLIST( listA );
+    const size_t numCols = LEN_PLIST( ELM_PLIST( listA, 1 ) );
+    IntegerType av;
+
+    std::ostringstream buildst;
+    buildst << numRows << " " << numCols << "\n";
+    for( size_t i = 1; i <= numRows; i++ ) {
+        Obj rowlist = ELM_PLIST( listA, i );
+	if ( !IS_LIST( rowlist ) )
+            return false; //ErrorQuit( "A row was expected", 0, 0 );
+        for( size_t j = 1; j <= numCols; j++ ) {
+            Obj tmp =  ELM_PLIST( rowlist, j );
+            if ( !GAPInt2IntegerType( tmp, av ) )
+                return false; //ErrorQuit( "Integer conversion error", 0, 0 );
+            buildst << av << " ";
+        }
+        buildst << "\n";
+    }
+    thst = buildst.str();
+    return true;
+}
 
 Obj _4ti2_GroebnerBasisOrder( Obj self, Obj listA, Obj listO )
 {
@@ -58,17 +80,6 @@ Obj _4ti2_GroebnerBasisOrder( Obj self, Obj listA, Obj listO )
 //        ErrorQuit( "Input argument must be a list of nonempty list", 0, 0);
 
     _4ti2_::VectorArray A( numRows, numCols );
-//    for( size_t i = 0; i < numRows; i++ ) {
-//        Obj rowlist = ELM_PLIST( listA, i+1 );
-//	if ( !IS_LIST( rowlist ) )
-//            ErrorQuit( "A row was expected", 0, 0 );
-//        for( size_t j = 0; j < numCols; j++ ) {
-//            Obj tmp =  ELM_PLIST( rowlist, j+1 );
-//            if ( !GAPInt2IntegerType( tmp, A[i][j] ) ) {
-//                ErrorQuit( "Integer conversion error", 0, 0 );
-//            }
-//        }
-//    }
 
     GAPMatrix2VectorArray( listA, A );
 
@@ -79,9 +90,8 @@ Obj _4ti2_GroebnerBasisOrder( Obj self, Obj listA, Obj listO )
     _4ti2_::BasicOptions::instance()->output = _4ti2_::BasicOptions::SILENT;
     _4ti2_::Feasible feasible( 0, &A );
     _4ti2_::VectorArray fbas = feasible.get_basis(); 
-    if ( fbas.get_number() == 0 ) {
+    if ( fbas.get_number() == 0 )
         ErrorQuit( "Could not compute the Groebner basis", 0, 0);
-    }
 
     _4ti2_::Globals::minimal = true;
     _4ti2_::GeneratingSet gs( feasible, 0 );
@@ -128,6 +138,80 @@ Obj _4ti2_GroebnerBasis( Obj self, Obj listA )
     return _4ti2_GroebnerBasisOrder( self, listA, 0 );
 }
 
+Obj _4ti2_Hilbert( Obj self, Obj list )
+{
+//    std::cout << "Hello!!!\n";
+    // This code is like NormalizInterface's to process input
+    int n = LEN_PLIST( list );
+
+//    std::cout << n << std::endl;
+    if ( n & 1 )
+        ErrorQuit( "Input list must have even number of elements", 0, 0);
+
+    std::istringstream ists;    
+    std::string st;
+    _4ti2_zsolve_::HilbertAPI<_4ti2_int64_t> problem;
+
+    for (int i = 0; i < n; i += 2) {
+        Obj type = ELM_PLIST( list, i+1 );
+        if ( ! IS_STRING_REP( type ) ) {
+            std::cerr << "Element " << i+1 << " of the input list must be a type string" << std::endl;
+            return Fail;
+        }
+        std::string stinty( CSTR_STRING(type) );
+        // We must check that the text used to identify the input components
+        // is one of the accepted by ZSolveAPI (HilbertAPI). Otherwise, if it differs 
+        // GAP will abort due to a segmentation fault.
+        if ( stinty.find( "mat", 0, 3 ) == std::string::npos &&
+                stinty.find( "lat", 0, 3 ) == std::string::npos &&
+                stinty.find( "ub", 0, 2 ) == std::string::npos &&
+                stinty.find( "rel", 0, 3 ) == std::string::npos &&
+                stinty.find( "sign", 0, 3 ) == std::string::npos ) {
+            std::cerr << "Unknown type of input '" << stinty.c_str() << "'\n";
+            return Fail;
+        }
+//        std::cout << stinty.c_str() << std::endl;
+
+        Obj inel = ELM_PLIST( list, i+2 );
+        if ( ! GAPMatrix2StdString( inel, st ) ) {
+            std::cerr << "Element " << i+2 << " of the input list must be a matrix" << std::endl;
+            return Fail;
+        }   
+//        std::cout << st.c_str() << std::endl;
+        ists.str( st );
+        
+        if ( ! problem.create_matrix( ists, stinty.c_str() ) ) {
+//            std::cout << "Problem...\n";
+            return Fail;
+        }
+    }
+
+    char *argopt[2];
+    argopt[1] = new char[3];
+    strcpy( argopt[1], "-q" );
+    problem.set_options( 2, argopt );
+    delete argopt[1];
+    problem.compute();
+    
+    _4ti2_zsolve_::VectorArrayAPI<_4ti2_int64_t> *hilbas =  (_4ti2_zsolve_::VectorArrayAPI<_4ti2_int64_t> *) problem.get_matrix( "zhom" );
+    Obj hilListGAP;
+    size_t numRows = hilbas->get_num_rows();
+    size_t numCols = hilbas->get_num_cols();
+    hilListGAP = NEW_PLIST( T_PLIST, numRows );
+    SET_LEN_PLIST( hilListGAP, numRows );
+    for ( size_t i = 0; i < numRows; i++ ) {
+        Obj lisGAP = NEW_PLIST( T_PLIST, numCols );
+    	SET_LEN_PLIST( lisGAP, numCols );
+        for ( size_t j = 0; j < numCols; j++ ) {
+            SET_ELM_PLIST( lisGAP, j+1, ObjInt_Int( hilbas->data[i][j] ) );
+            CHANGED_BAG( lisGAP );
+        }
+        SET_ELM_PLIST( hilListGAP, i+1, lisGAP );
+        CHANGED_BAG( hilListGAP );
+    }
+    return hilListGAP;
+}
+
 typedef Obj (* GVarFunc)(/*arguments*/);
 
 #define GVAR_FUNC_TABLE_ENTRY(srcfile, name, nparam, params) \
@@ -140,6 +224,7 @@ typedef Obj (* GVarFunc)(/*arguments*/);
 static StructGVarFunc GVarFuncs[] = {
     GVAR_FUNC_TABLE_ENTRY("gap4ti2.cc", _4ti2_GroebnerBasisOrder, 2, "list, list"),
     GVAR_FUNC_TABLE_ENTRY("gap4ti2.cc", _4ti2_GroebnerBasis, 1, "list"),
+    GVAR_FUNC_TABLE_ENTRY("gap4ti2.cc", _4ti2_Hilbert, 1, "list"),
     { 0 } /* Finish with an empty entry */
 
 };
