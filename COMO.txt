@@ -9,7 +9,7 @@ make
 -------
 después 4ti2:
 
-./configure --enable-shared --prefix=/home/alfredo/lib/4ti2-1.6.2 --with-gmp=/home/alfredo/lib/gap4r7/bin/x86_64-unknown-linux-gnu-gcc-default64/extern/gmp-5.0.5
+./configure --enable-shared --prefix=/home/alfredo/lib/4ti2-1.6.2 --with-gmp=/home/alfredo/lib/gap4r7/bin/x86_64-unknown-linux-gnu-gcc-default64/extern/gmp-5.0.5 —with-glpk=/home/alfredo/lib/glkp-4.55
 
 make
 

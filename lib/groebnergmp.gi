@@ -9,7 +9,7 @@
 #! order to compute the Groebner basis
 #! @Returns a list containing the differences of the exponents of the binomials
 #! @Arguments a[,m]
-InstallGlobalFunction(GroebnerBasis4ti2, function(arg)
+InstallGlobalFunction(GroebnerBasis4ti2gmp, function(arg)
     local a, c, narg, rows, cols, ones;
 
     narg:=Length(arg);
@@ -22,12 +22,8 @@ InstallGlobalFunction(GroebnerBasis4ti2, function(arg)
             Error("The argument must be a matrix of integers");
         fi;
 
-        if First(Flat(a),n->GMP_REDUCE(n)<>fail) <> fail then
-            Error("The size of the input suggest to use the GMP version of this function");
-        fi;
-
         if narg=1 then
-            return _4ti2_GroebnerBasis(a);
+            return _4ti2_GroebnerBasisGMP(a);
         fi;
 
         cols:=Length(a[1]);
@@ -49,7 +45,7 @@ InstallGlobalFunction(GroebnerBasis4ti2, function(arg)
                 c:=Concatenation([ones],c){[1..cols]};
             fi;
             if not(IsMatrix(c)) then
-                Error("The second argument must be one of the following: a matrix of integers, or the strings lex, grlex or grevlex");
+              Error("The second argument must be one of the following: a matrix of integers, or the strings lex, grlex or grevlex");
             fi;
             if not(IsInt(c[1][1])) then
                 Error("The second argument must be one of the following: a matrix of integers, or the strings lex, grlex or grevlex");
@@ -59,7 +55,7 @@ InstallGlobalFunction(GroebnerBasis4ti2, function(arg)
                 Error("The matrix representing the ordering must have full rank.");
             fi;
 
-            return _4ti2_GroebnerBasisOrder(a, c);
+            return _4ti2_GroebnerBasisOrderGMP(a, c);
         fi;
     fi;
     Error("Wrong number of arguments");

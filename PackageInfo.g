@@ -2,8 +2,8 @@ SetPackageInfo( rec(
 
 PackageName := "4ti2gap",
 Subtitle := "GAP wraper for 4ti2",
-Version := "0.0.1",
-Date    := "05/12/2014", # dd/mm/yyyy format
+Version := "0.0.2",
+Date    := "9/1/2015", # dd/mm/yyyy format
 
 Persons := [
   rec(

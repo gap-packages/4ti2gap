@@ -1,8 +1,9 @@
 #include <iostream>
+#include <string>
 #include <sstream>
-#include <cstring>
+// #include <cstring>
 
-#include "4ti2gap.h"
+#include "4ti2gapgmp.h"
 
 #include "groebner/Globals.h"
 #include "groebner/VectorArray.h"
@@ -17,26 +18,49 @@
 #include "zsolve/VectorArrayAPI.hpp"
 #include "zsolve/HilbertAPI.hpp"
 
-bool GAPInt2IntegerType( Obj ival, IntegerType& oval )
+bool GAPInt2IntegerTypeMpz( Obj ival, IntegerType& oval )
 {
-    if ( IS_INTOBJ( ival ) ) 
-        oval = INT_INTOBJ( ival );
-    else if ( TNUM_OBJ( ival ) == T_INTPOS || TNUM_OBJ( ival ) == T_INTNEG ) {
+    if ( IS_INTOBJ( ival ) ) {
+        oval = mpz_class( (int) INT_INTOBJ (ival ) );
+        return true;
+    } 
+    else if ( TNUM_OBJ( ival ) == T_INTPOS || TNUM_OBJ( ival ) == T_INTNEG) {
+        mpz_ptr m = oval.get_mpz_t();
         UInt size = SIZE_INT( ival );
-        if ( size == 1 ) {
-            oval = *ADDR_INT( ival );
-            if ( oval < 0 ) {
-                std::cout << "Cannot convert MP values, try another option." << std::endl;
-                return false;   // overflow
-            }
-            if ( TNUM_OBJ( ival ) == T_INTNEG )
-                oval = -oval;
-        }
+        mpz_realloc2(m, size * GMP_NUMB_BITS);
+        memcpy(m->_mp_d, ADDR_INT( ival ), sizeof(mp_limb_t) * size);
+        m->_mp_size = (TNUM_OBJ( ival ) == T_INTPOS) ? (Int)size : - (Int)size;
+        return true;
     }
-    return true;
+    return false;
 }
 
-void GAPMatrix2VectorArray( Obj listA, _4ti2_::VectorArray &A )
+static bool GAPInt2StdString( Obj ival, std::string& oval )
+{
+    if ( IS_INTOBJ( ival ) )
+        oval = std::to_string( (int) INT_INTOBJ (ival ) );
+    else {
+        IntegerType aux;
+        if ( GAPInt2IntegerTypeMpz( ival, aux ) )
+            oval = aux.get_str();
+        else
+            return false;
+    }
+    return true;
+//     } else if ( TNUM_OBJ( ival ) == T_INTPOS || TNUM_OBJ( ival ) == T_INTNEG) {
+//         mpz_class aux;
+//         mpz_ptr m = aux.get_mpz_t();
+//         UInt size = SIZE_INT( ival );
+//         mpz_realloc2(m, size * GMP_NUMB_BITS);
+//         memcpy(m->_mp_d, ADDR_INT( ival ), sizeof(mp_limb_t) * size);
+//         m->_mp_size = (TNUM_OBJ( ival ) == T_INTPOS) ? (Int)size : - (Int)size;
+//         oval = aux.get_str();
+//         return true;
+//     }
+//     return false;
+}
+
+void GAPMatrix2VectorArrayMpz( Obj listA, _4ti2_::VectorArray &A )
 {
     for( size_t i = 0; i < A.get_number(); i++ ) {
         Obj rowlist = ELM_PLIST( listA, i+1 );
@@ -44,19 +68,19 @@ void GAPMatrix2VectorArray( Obj listA, _4ti2_::VectorArray &A )
             ErrorQuit( "A row was expected", 0, 0 );
         for( size_t j = 0; j < A.get_size(); j++ ) {
             Obj tmp =  ELM_PLIST( rowlist, j+1 );
-            if ( !GAPInt2IntegerType( tmp, A[i][j] ) ) {
+            if ( !GAPInt2IntegerTypeMpz( tmp, A[i][j] ) ) {
                 ErrorQuit( "Integer conversion error", 0, 0 );
             }
         }
     }
 }
 
-bool GAPMatrix2StdString( Obj listA, std::string& thst )
+bool GAPMatrixMpz2StdString( Obj listA, std::string& thst )
 {
     size_t numRows = LEN_PLIST( listA );
     size_t numCols;
     std::ostringstream buildst;
-    IntegerType av;
+    std::string av;
     Obj rowlist = ELM_PLIST( listA, 1 );
     if ( IS_PLIST( rowlist ) ) {
         numCols = LEN_PLIST( ELM_PLIST( listA, 1 ) );
@@ -75,7 +99,7 @@ bool GAPMatrix2StdString( Obj listA, std::string& thst )
                     buildst << CSTR_STRING( tmp ) << " ";
                 }
                 else {
-                    if ( !GAPInt2IntegerType( tmp, av ) )
+                    if ( !GAPInt2StdString( tmp, av ) )
                         return false; //ErrorQuit( "Integer conversion error", 0, 0 );
                     buildst << av << " ";
                 }
@@ -97,7 +121,7 @@ bool GAPMatrix2StdString( Obj listA, std::string& thst )
                 buildst << CSTR_STRING( tmp ) << " ";
             }
             else {
-                if ( !GAPInt2IntegerType( tmp, av ) )
+                if ( !GAPInt2StdString( tmp, av ) )
                     return false; //ErrorQuit( "Integer conversion error", 0, 0 );
                 buildst << av << " ";
             }
@@ -108,15 +132,50 @@ bool GAPMatrix2StdString( Obj listA, std::string& thst )
     return true;
 }
 
+Obj Mpz2GAP( const mpz_t x )
+{
+    Obj res;
+    int size = x->_mp_size;
+    int sign;
+    if (size == 0) {
+        return INTOBJ_INT(0);
+    } else if (size < 0) {
+        size = -size;
+        sign = -1;
+    } else {
+        sign = +1;
+    }
+#ifdef SYS_IS_64_BIT
+    if (size == 1) {
+        if (sign > 0)
+            return ObjInt_UInt(x->_mp_d[0]);
+        else
+            return AInvInt(ObjInt_UInt(x->_mp_d[0]));
+    }
+#endif
+    size = sizeof(mp_limb_t) * size;
+    if (sign > 0)
+        res = NewBag(T_INTPOS, size);
+    else
+        res = NewBag(T_INTNEG, size);
+    memcpy(ADDR_INT(res), x->_mp_d, size);
+    return res;
+}
+
+inline Obj IntegerTypeMpz2GAP( const IntegerType& x )
+{
+    return Mpz2GAP( x.get_mpz_t() );
+}
+
 // It is assumed that listA is a list of lists with the same length.
-Obj _4ti2_GroebnerBasisOrder( Obj self, Obj listA, Obj listO )
+Obj _4ti2_GroebnerBasisOrderGMP( Obj self, Obj listA, Obj listO )
 {
     size_t numRows = LEN_PLIST( listA );
     const size_t numCols = LEN_PLIST( ELM_PLIST( listA, 1 ) );
 
     _4ti2_::VectorArray A( numRows, numCols );
 
-    GAPMatrix2VectorArray( listA, A );
+    GAPMatrix2VectorArrayMpz( listA, A );
 
     std::streambuf *old = std::cout.rdbuf();
     std::stringstream ss;
@@ -141,7 +200,7 @@ Obj _4ti2_GroebnerBasisOrder( Obj self, Obj listA, Obj listO )
         const size_t numColsO = LEN_PLIST( ELM_PLIST( listO, 1 ) );
 
         _4ti2_::VectorArray cost( numRowsO, numColsO );
-        GAPMatrix2VectorArray( listO, cost );
+        GAPMatrix2VectorArrayMpz( listO, cost );
         _4ti2_::GroebnerBasis gb( gs, &cost );
         binomios = gb.get_groebner_basis();
     }
@@ -157,7 +216,7 @@ Obj _4ti2_GroebnerBasisOrder( Obj self, Obj listA, Obj listO )
         Obj binGAP = NEW_PLIST( T_PLIST, numCols );
     	SET_LEN_PLIST( binGAP, numCols );
         for ( size_t j = 0; j < numCols; j++ ) {
-            SET_ELM_PLIST( binGAP, j+1, ObjInt_Int( binomios[i][j] ) );
+            SET_ELM_PLIST( binGAP, j+1, IntegerTypeMpz2GAP( binomios[i][j] ) );
             CHANGED_BAG( binGAP );
         }
         SET_ELM_PLIST( binListGAP, i+1, binGAP );
@@ -166,12 +225,12 @@ Obj _4ti2_GroebnerBasisOrder( Obj self, Obj listA, Obj listO )
     return binListGAP;
 }
 
-Obj _4ti2_GroebnerBasis( Obj self, Obj listA )
+Obj _4ti2_GroebnerBasisGMP( Obj self, Obj listA )
 {
-    return _4ti2_GroebnerBasisOrder( self, listA, 0 );
+    return _4ti2_GroebnerBasisOrderGMP( self, listA, 0 );
 }
 
-Obj _4ti2_Hilbert( Obj self, Obj list )
+Obj _4ti2_HilbertGMP( Obj self, Obj list )
 {
     // This code is similar to NormalizInterface's input processing
     int n = LEN_PLIST( list );
@@ -182,14 +241,7 @@ Obj _4ti2_Hilbert( Obj self, Obj list )
     }
     
     std::string st;
-
-#ifdef _4ti2_INT64_
-    _4ti2_zsolve_::HilbertAPI<_4ti2_int64_t> problem;
-#endif
-
-#ifdef _4ti2_INT32_
-    _4ti2_zsolve_::HilbertAPI<_4ti2_int32_t> problem;
-#endif
+    _4ti2_zsolve_::HilbertAPI<mpz_class> problem;
 
     for (int i = 0; i < n; i += 2) {
         Obj type = ELM_PLIST( list, i+1 );
@@ -204,7 +256,7 @@ Obj _4ti2_Hilbert( Obj self, Obj list )
             std::cerr << "Element " << i+2 << " must be a vector or a matrix.\n";
             return Fail;
         }
-        if ( ! GAPMatrix2StdString( inel, st ) ) {
+        if ( ! GAPMatrixMpz2StdString( inel, st ) ) {
             std::cerr << "Unable to proccess element " << i+2 << " of the input list" << std::endl;
             return Fail;
         }
@@ -229,7 +281,8 @@ Obj _4ti2_Hilbert( Obj self, Obj list )
     catch ( _4ti2_zsolve_::PrecisionException e )
     {
         std::cerr << "Results were near maximum precision (" << e.precision () << "bit).\n";
-        std::cerr << "Please use the multiple precision version of this function!" << std::endl;
+        std::cerr << "Please restart with higher precision!" << std::endl;
+        std::cerr << "...., but wait, this is not available as an option yet. We are wonking on it..." << std::endl;
         return Fail;
     }
     catch ( _4ti2_zsolve_::IOException e )
@@ -238,7 +291,7 @@ Obj _4ti2_Hilbert( Obj self, Obj list )
         return Fail;
     }
 
-    _4ti2_zsolve_::VectorArrayAPI<_4ti2_int64_t> *hilbas =  (_4ti2_zsolve_::VectorArrayAPI<_4ti2_int64_t> *) problem.get_matrix( "zhom" );
+    _4ti2_zsolve_::VectorArrayAPI<mpz_class> *hilbas =  (_4ti2_zsolve_::VectorArrayAPI<mpz_class> *) problem.get_matrix( "zhom" );
     Obj hilListGAP;
     size_t numRows = hilbas->get_num_rows();
     size_t numCols = hilbas->get_num_cols();
@@ -249,7 +302,7 @@ Obj _4ti2_Hilbert( Obj self, Obj list )
         Obj lisGAP = NEW_PLIST( T_PLIST, numCols );
     	SET_LEN_PLIST( lisGAP, numCols );
         for ( size_t j = 0; j < numCols; j++ ) {
-            SET_ELM_PLIST( lisGAP, j+1, ObjInt_Int( hilbas->data[i][j] ) );
+            SET_ELM_PLIST( lisGAP, j+1, IntegerTypeMpz2GAP( hilbas->data[i][j] ) );
             CHANGED_BAG( lisGAP );
         }
         SET_ELM_PLIST( hilListGAP, i+1, lisGAP );
@@ -268,10 +321,9 @@ typedef Obj (* GVarFunc)(/*arguments*/);
 
 // Table of functions to export
 static StructGVarFunc GVarFuncs[] = {
-    GVAR_FUNC_TABLE_ENTRY("4ti2gap.cc", _4ti2_GroebnerBasisOrder, 2, "list, list"),
-    GVAR_FUNC_TABLE_ENTRY("4ti2gap.cc", _4ti2_GroebnerBasis, 1, "list"),
-    GVAR_FUNC_TABLE_ENTRY("4ti2gap.cc", _4ti2_Hilbert, 1, "list"),
-//    GVAR_FUNC_TABLE_ENTRY("4ti2hilbert.cc", _4ti2_gmp, 1, "x"),
+    GVAR_FUNC_TABLE_ENTRY("4ti2gapgmp.cc", _4ti2_GroebnerBasisOrderGMP, 2, "list, list"),
+    GVAR_FUNC_TABLE_ENTRY("4ti2gapgmp.cc", _4ti2_GroebnerBasisGMP, 1, "list"),
+    GVAR_FUNC_TABLE_ENTRY("4ti2gapgmp.cc", _4ti2_HilbertGMP, 1, "list"),
     { 0 } /* Finish with an empty entry */
 
 };
@@ -309,7 +361,7 @@ static StructInitInfo module = {
 #else
  /* type        = */ MODULE_DYNAMIC,
 #endif
- /* name        = */ "4ti2gap",
+ /* name        = */ "4ti2gapgmp",
  /* revision_c  = */ 0,
  /* revision_h  = */ 0,
  /* version     = */ 0,

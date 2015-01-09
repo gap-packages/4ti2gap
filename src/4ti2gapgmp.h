@@ -1,5 +1,5 @@
-#ifndef _4ti2GAP_H
-#define _4ti2GAP_H
+#ifndef _4ti2GAPGMP_H
+#define _4ti2GAPGMP_H
 
 // extern "C" {
 #include "src/compiled.h"

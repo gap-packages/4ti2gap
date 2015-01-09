@@ -29,7 +29,7 @@ dnl ## C++ is the language
 dnl ##
 AC_PROG_CXX
 AC_LANG([C++])
-AX_CHECK_COMPILE_FLAG([-std=c++0x], [CXXFLAGS="$CXXFLAGS -std=c++0x"])
+dnl AX_CHECK_COMPILE_FLAG([-std=c++0x], [CXXFLAGS="$CXXFLAGS -std=c++0x"])
 
 dnl ##
 dnl ## Setup libtool (for building the GAP kernel extension)
@@ -52,8 +52,6 @@ AC_ARG_WITH([4ti2],
     [AC_MSG_ERROR([Must use --with-4ti2])]
 )
 
-echo "hola $with_4ti2"
-
 FTIT_CPPFLAGS="-I$FTIT/include"
 FTIT_LDPATH="$FTIT/lib"
 FTIT_LDFLAGS="-L$FTIT_LDPATH"
@@ -62,15 +60,43 @@ AC_SUBST(FTIT_LDPATH)
 AC_SUBST(FTIT_CPPFLAGS)
 
 dnl ##
-dnl ## Locate 4ti2
+dnl ## Locate GMP and check if 4ti2 is compiled with GMP
 dnl ##
-LB_CHECK_GMP(,,[AC_MSG_WARN([GNU MP not found.
-4ti2 will be built without support for arbitrary-precision computations.])])
+LB_CHECK_GMP(,[AC_MSG_WARN([GNU MP not found.
+4ti2gap will be built without support for arbitrary-precision computations.])])
+AM_CONDITIONAL([WITH_GMP],[test "$gmp_found" != "no" -a "$gmp_4ti2" != "no"])
+
+dnl CXXFLAGS="${CXXFLAGS} ${FTIT_CPPFLAGS} -D_4TI2_GMP_"
+dnl LIBS="${LIBS} ${FTIT_LDFLAGS} -l4ti2gmp"
+
+dnl AC_TRY_LINK(
+dnl     [#include "groebner/VectorArray.h"],
+dnl     [std::VectorArray a(2, 2);],
+dnl       ac_cv_ipv6=yes,
+dnl       ac_cv_ipv6=no,
+dnl       ac_cv_ipv6=no))
+dnl AC_MSG_RESULT($ac_cv_ipv6)
+dnl if test $ac_cv_ipv6 = yes ; then
+dnl       AC_DEFINE(IPV6,,"check if system supports IPV6")
+dnl fi
 
 dnl ##
 dnl ## Detect pointer size to distinguish 32 and 64 bit builds
 dnl ##
 AC_CHECK_SIZEOF([void **])
+if test "${ac_cv_sizeof_void_pp}" = "8" ; then
+INTBITS="-D_4ti2_INT64_"
+FTITLIB="-l4ti2int64"
+AC_SUBST([INTBITS])
+AC_SUBST([FTITLIB])
+elif test "${ac_cv_sizeof_void_pp}" = "4" ; then
+INTBITS="-D_4ti2_INT32_"
+FTITLIB="-l4ti2int32"
+AC_SUBST([INTBITS])
+AC_SUBST([FTITLIB])
+else
+AC_MSG_ERROR([Architecture detection fail])
+fi
 
 dnl ##
 dnl ## Detect Windows resp. Cygwin

@@ -10,36 +10,46 @@ This package intends to use the tools included in 4ti2 from the gap shell.
 2 Installation preparation
 ==========================
 
-4ti2 must be compiled with --enable-shared
+To run this package you need 4ti2 installed with the components groebner and zsolve enabled, configured with the option --enable-shared.
 
-It works if gap is compiled with its own gmp and then 4ti2gap is compiled using --with-gmp pointing to gap's gmp
+In order to use integer multiple precision arithmetic, the library GMP must be installed with the c++ option enabled. Also GAP needs this library.
 
-The funny thing is that, though it only works with gmp "dynamic", it so far uses int64 only. 
+So the best way to get it working is the following. Compile gmp with
 
-So the best way to get it working is the following. Compile gap with
+./configure --prefix=whereyouwanttoinstallgmp --enable-cxx 
 
-./configure --with-gmp=yes
+
+Compile gap with
+
+./configure --with-gmp=whereyouinstalledgmp
 
 make
 
 Then compile 4ti2 with
 
-./configure --enable-shared --prefix=whereyouwanttoinstall4ti2 --with-gmp=gaphomedit/bin/xBLABLABLA/extern/gmp-5.0.5
+./configure --enable-shared --prefix=whereyouwanttoinstall4ti2 --with-gmp=whereyouinstalledgmp
 
 make
 
 make install
 
+In some systems 4ti2 does not find the Gnu Linear Programming Kit needed by the groebner component. Adding the path to GLPK to the previous configure command line may help:
+
+./configure --enable-shared --prefix=whereyouwanttoinstall4ti2 --with-gmp=whereyouinstalledgmp --with-glpk=whereglpkisinstalled
+
+
 Finally go to 4ti2gap folder and do
 
-./configure --with-gaproot=whereyouinstalledgap --with-4ti2=whereyouinstalled4ti2
+./configure --with-gaproot=whereyouinstalledgap --with-4ti2=whereyouinstalled4ti2 --with-gmp=whereyouinstalledgmp
 
 make
 
 3 Documentation and tests
 =========================
 
-So far only groebner is included, and it is called in the following way
+So far a limited groebner and hilbert are included. 
+
+groebner is called in the following way:
 
 GroebnerBasis4ti2( matrix , order ), where matrix is a matrix with integer entries and order is either an order matrix or "lex", "grlex" "grevlex".
 
@@ -62,13 +72,34 @@ gap> GroebnerBasis4ti2([[3,5,7]],"grlex");
 [ [ 0, 7, -5 ], [ 1, -2, 1 ], [ 1, 5, -4 ], [ 2, 3, -3 ], [ 3, 1, -2 ], 
   [ 4, -1, -1 ] ]
 
+If GMP is installed, GroebnerBasis4ti2gmp( matrix , order ) uses integer multiple precision arithmetic.
+
+----------
+
+hilbert actually only returns the homogenous output. It is called in the following way:
+HilbertBasis4ti2( problem ), where problem is a list to specify the input components of the "problem" (see the 4ti2 manual):
+
+gap> problem:=[ "mat", [ [ 1, -3, 9, -1, 81 ], [ -9, 27, 81, -9, 1 ], [ 1, -3, 9, 1, -81 ] ], "rel", [ "=", "<", ">"], "sign", [1, 0, 1, 0, -1] ];; HilbertBasis4ti2(problem);
+
+[ [ 3, 1, 0, 0, 0 ], [ 0, -364, 0, -1095, -27 ], [ 1, 0, 0, 1, 0 ], 
+  [ 1, -121, 0, -365, -9 ], [ 0, -1, 0, 3, 0 ], [ 0, -27, 0, -81, -2 ], 
+  [ 0, -14, 0, -39, -1 ], [ 2, -13, 0, -40, -1 ], [ 0, 0, 1, 9, 0 ] ]
+
+gap> problem:=["mat", [[1, 1, 1, -1, -1, -1, 0, 0, 0 ], [1, 1, 1, 0, 0, 0, -1, -1, -1], [0, 1, 1, -1, 0, 0, -1, 0, 0], [1, 0, 1, 0, -1, 0, 0, -1,  0], [ 1, 1, 0, 0, 0, -1, 0, 0, -1], [ 0, 1, 1, 0, -1, 0, 0, 0, -1], [ 1, 1, 0, 0, -1, 0, -1, 0, 0]], "rel", [[0, 0 ,0 ,0, 0, 0, 0]], "sign", [[0, 0, 0, 0, 0, 0, 0, 0, 0]]];; HilbertBasis4ti2(problem);
+
+[ ]
+
+gap> problem:=["mat", [[1, -31, -1, 1], [-111, 5, 10, 25]]];;HilbertBasis4ti2(problem);
+
+[ [ 35, 0, 136, 101 ], [ 15, 1, 36, 52 ], [ 195, 34, 0, 859 ], 
+  [ 110, 19, 4, 483 ], [ 25, 4, 8, 107 ] ]
+
+If GMP is installed, HilbertBasis4ti2gmp( problem ) uses integer multiple precision arithmetic.
+
 4 Roadmap
 =========
 
-1.- Use gmp insted of int64.
+1.- See if we can get rid of --enable-shared
 
-2.- See if we can get rid of --enable-shared
+2.- Produce a 32 bit version that uses gmp and can be compiled under cygwin.
 
-3.- Produce a 32 bit version that uses gmp and can be compiled under cygwin.
-
-4.- Include zsolve (in process)
