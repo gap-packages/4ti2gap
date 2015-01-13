@@ -1,15 +1,15 @@
 # Check for GMP, taken from linbox
 
 # Modified by Pascal Giorgi, 2003-12-03
-# Modified by Alfredo Schez.-R., 2015-01-05
+# Modified by Alfredo Schez.-R., 2015-01-09
 
 dnl LB_CHECK_GMP ([ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
 dnl
-dnl Test for the GNU Multiprecision library and define GMP_CFLAGS, GMP_LIBS and GMP_HOME
+dnl Test for the GNU Multiprecision library and define GMP_FLAGS, GMP_LIBS and GMP_HOME
 
 AC_DEFUN([LB_CHECK_GMP],
 [
-    DEFAULT_CHECKING_PATH="DEFAULT"
+    DEFAULT_CHECKING_PATH="/usr /usr/local"
     GMP_HOME_PATH="${DEFAULT_CHECKING_PATH}"
     AC_ARG_WITH(gmp,
     AS_HELP_STRING([--with-gmp={DIR|no}],
@@ -31,20 +31,17 @@ BACKUP_CXXFLAGS=${CXXFLAGS}
 BACKUP_LIBS=${LIBS}
 
 AC_MSG_CHECKING(for GMP)
-dnl ToDo: remember the values of GMP_* for a GMP found
 for GMP_HOME in ${GMP_HOME_PATH} 
     do	
-    if test "x$GMP_HOME" = "xDEFAULT" -o -r "$GMP_HOME/include/gmp.h"; then
-        if test "x$GMP_HOME" != "xDEFAULT" ; then
-            GMP_CFLAGS="-I${GMP_HOME}/include"
-            GMP_LIBS="-L${GMP_HOME}/lib -lgmp"	
-            # We used to use -R here, but it's not portable
-            ##-R${GMP_HOME}/lib 
-        else
-            GMP_CFLAGS=
-            GMP_LIBS="-lgmp"		
+    if test -r "$GMP_HOME/include/gmp.h"; then
+        GMP_FLAGS="-I${GMP_HOME}/include"
+        GMP_LIBS="-L${GMP_HOME}/lib -lgmp"	
+        # We used to use -R here, but it's not portable
+        ##-R${GMP_HOME}/lib 
+        if test -r "$GMP_HOME/include/gmpxx.h"; then
+            GMP_LIBS="${GMP_LIBS} -lgmpxx"
         fi
-        CXXFLAGS="${CXXFLAGS} ${GMP_CFLAGS}"
+        CXXFLAGS="${CXXFLAGS} ${GMP_FLAGS}"
         LIBS="${LIBS} ${GMP_LIBS}"
         AC_TRY_LINK(
         [#include <gmp.h>],
@@ -52,26 +49,39 @@ for GMP_HOME in ${GMP_HOME_PATH}
         [
             gmp_found="yes"
             AC_SUBST(GMP_HOME)
-            AC_SUBST(GMP_CFLAGS)
+            AC_SUBST(GMP_FLAGS)
             AC_SUBST(GMP_LIBS)
             AC_MSG_CHECKING(for GMP support in 4ti2)
             CXXFLAGS="${CXXFLAGS} ${FTIT_CPPFLAGS} -D_4ti2_GMP_"
-            LIBS="${LIBS} ${FTIT_LDFLAGS} -lgmpxx -l4ti2gmp"
+            LIBS="${LIBS} ${FTIT_LDFLAGS} -l4ti2gmp"
             AC_TRY_LINK(
             [#include "groebner/VectorArray.h"],
             [_4ti2_::VectorArray a(2, 2)],[
                 gmp_4ti2="yes"
                 AC_MSG_RESULT(found)
                 AC_DEFINE(HAVE_GMP,1,[Define if GMP is installed])
-                ifelse([$1], , :, [$1])
-                break
             ],[			
                 gmp_4ti2="no"
                 break
             ])
+            if test "x$gmp_4ti2" = "xyes"; then 
+                AC_MSG_CHECKING(if GMP has c++ interface available)
+                LIBS="${LIBS} -lgmpxx"
+                AC_TRY_LINK(
+                [#include <gmpxx.h>],
+                [mpz_class v],[
+                    gmp_4ti2="yes"
+                    AC_MSG_RESULT(gmpxx found)
+                    AC_DEFINE(HAVE_GMP,1,[Define if GMP is installed])
+                    ifelse([$1], , :, [$1])
+                ],[			
+                    gmp_4ti2="no"
+                ])
+                break
+             fi 
         ],[
             gmp_found="no"	
-            unset GMP_CFLAGS
+            unset GMP_FLAGS
             unset GMP_LIBS	
         ])
     else

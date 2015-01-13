@@ -12,9 +12,9 @@ This package intends to use the tools included in 4ti2 from the gap shell.
 
 To run this package you need 4ti2 installed with the components groebner and zsolve enabled, configured with the option --enable-shared.
 
-In order to use integer multiple precision arithmetic, the library GMP must be installed with the c++ option enabled. Also GAP needs this library.
+In order to use integer multiple precision arithmetic, the library GMP must be installed with the c++ option enabled. An installed GMP is also needed in order to compile this GAP package, even without integer multiple precision arithmetic.
 
-So the best way to get it working is the following. Compile gmp with
+So the best way to get it working is the following. Compile GMP with
 
 ./configure --prefix=whereyouwanttoinstallgmp --enable-cxx 
 
