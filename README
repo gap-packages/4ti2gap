@@ -12,37 +12,40 @@ This package intends to use the tools included in 4ti2 from the gap shell.
 
 To run this package you need 4ti2 installed with the components groebner and zsolve enabled, configured with the option --enable-shared.
 
-In order to use integer multiple precision arithmetic, the library GMP must be installed with the c++ option enabled. An installed GMP is also needed in order to compile this GAP package, even without integer multiple precision arithmetic.
+In order to use integer multiple precision arithmetic, the library GMP must be installed with the c++ option enabled. Also GAP needs this library. 
 
-So the best way to get it working is the following. Compile GMP with
+If you have GMP and 4ti2 installed in your system, you can try to build 4ti2gap in its folder. The following commands will try to find a GMP installed in /usr or /usr/local. (Note that the installation folders for GAP and 4ti2 should be specified with the appropiate options).
+
+./configure --with-gaproot=whereyouinstalledgap --with-4ti2=whereyouinstalled4ti2 --with-gmp=yes
+make
+
+Alternativelly, if GMP is installed in another folder, the value of --with-gmp should be this path of this folder.
+
+If you want to use 4ti2gap with GMP, best way to get it working is the following. Compile gmp with
 
 ./configure --prefix=whereyouwanttoinstallgmp --enable-cxx 
-
 
 Compile gap with
 
 ./configure --with-gmp=whereyouinstalledgmp
-
 make
 
 Then compile 4ti2 with
 
 ./configure --enable-shared --prefix=whereyouwanttoinstall4ti2 --with-gmp=whereyouinstalledgmp
-
 make
-
 make install
 
 In some systems 4ti2 does not find the Gnu Linear Programming Kit needed by the groebner component. Adding the path to GLPK to the previous configure command line may help:
 
-./configure --enable-shared --prefix=whereyouwanttoinstall4ti2 --with-gmp=whereyouinstalledgmp --with-glpk=whereglpkisinstalled
-
+...$ ./configure --enable-shared --prefix=whereyouwanttoinstall4ti2 --with-gmp=whereyouinstalledgmp --with-glpk=whereglpkisinstalled
 
 Finally go to 4ti2gap folder and do
 
 ./configure --with-gaproot=whereyouinstalledgap --with-4ti2=whereyouinstalled4ti2 --with-gmp=whereyouinstalledgmp
-
 make
+
+
 
 3 Documentation and tests
 =========================

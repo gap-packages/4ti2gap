@@ -29,7 +29,14 @@ dnl ## C++ is the language
 dnl ##
 AC_PROG_CXX
 AC_LANG([C++])
-dnl AX_CHECK_COMPILE_FLAG([-std=c++0x], [CXXFLAGS="$CXXFLAGS -std=c++0x"])
+case $host_os in
+    darwin* )
+        AX_CHECK_COMPILE_FLAG([-std=c99], [CXXFLAGS="$CXXFLAGS -std=c99"])
+        ;;
+    *)
+        AX_CHECK_COMPILE_FLAG([-std=c++0x], [CXXFLAGS="$CXXFLAGS -std=c++0x"])
+        ;;
+esac
 
 dnl ##
 dnl ## Setup libtool (for building the GAP kernel extension)
@@ -41,7 +48,6 @@ dnl ##
 dnl ## Locate the GAP root dir
 dnl ##
 AC_FIND_GAP
-
 dnl ##
 dnl ## Locate 4ti2
 dnl ##
@@ -62,9 +68,34 @@ AC_SUBST(FTIT_CPPFLAGS)
 dnl ##
 dnl ## Locate GMP and check if 4ti2 is compiled with GMP
 dnl ##
-LB_CHECK_GMP(,[AC_MSG_WARN([GNU MP not found.
-4ti2gap will be built without support for arbitrary-precision computations.])])
-AM_CONDITIONAL([WITH_GMP],[test "$gmp_found" != "no" -a "$gmp_4ti2" != "no"])
+LB_CHECK_GMP(,[
+if test "${GAP_CPPFLAGS}/gmp" = "${GAP_CPPFLAGS}"; then
+    AC_MSG_WARN([GMP not found. 4ti2gap will be built without support for arbitrary-precision computations.])
+else
+    AC_MSG_WARN([4ti2gap will be built without support for arbitrary-precision computations.])
+fi
+])
+echo "Valor de GMP_LIBS: ${GMP_LIBS}"
+if test ! -z "${GMP_LIBS}"; then
+    AC_MSG_CHECKING(for GMP support in 4ti2)
+    BACKUP_CPPFLAGS=${CPPFLAGS}
+    BACKUP_LIBS=${LIBS}
+    CPPFLAGS="${CPPFLAGS} ${FTIT_CPPFLAGS} -D_4ti2_GMP_"
+    LIBS="${LIBS} ${FTIT_LDFLAGS} -l4ti2gmp"
+    AC_TRY_LINK(
+    [#include "groebner/VectorArray.h"],
+    [_4ti2_::VectorArray a(2, 2)],[
+        gmp4ti2_found="yes"
+        AC_MSG_RESULT(yes)
+    ],[			
+        gmp4ti2_found="no"
+        AC_MSG_RESULT(4ti2 is not capable to manipulate arbitrary precision values. Disabling.)
+    ])
+    CPPFLAGS=${BACKUP_CPPFLAGS}
+    LIBS=${BACKUP_LIBS}
+fi
+
+AM_CONDITIONAL([WITH_GMPXX],[test "$gmpxx_found" != "no" -a "$gmp4ti2_found" != "no"])
 
 dnl CXXFLAGS="${CXXFLAGS} ${FTIT_CPPFLAGS} -D_4TI2_GMP_"
 dnl LIBS="${LIBS} ${FTIT_LDFLAGS} -l4ti2gmp"

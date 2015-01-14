@@ -13,16 +13,16 @@ GAPGMPINSTLIB = $(BINARCHDIR)/4ti2gapgmp.so
 
 lib_LTLIBRARIES = 4ti2gap.la
 
-if WITH_GMP
+if WITH_GMPXX
 lib_LTLIBRARIES += 4ti2gapgmp.la
 endif
 
 4ti2gap_la_SOURCES = src/4ti2gap.cc
-4ti2gap_la_CPPFLAGS = $(GAP_CPPFLAGS) $(GMP_FLAGS) -DCONFIG_H $(FTIT_CPPFLAGS) @INTBITS@ 
+4ti2gap_la_CPPFLAGS = $(GAP_CPPFLAGS) $(GMP_CPPFLAGS) -DCONFIG_H $(FTIT_CPPFLAGS) @INTBITS@ 
 4ti2gap_la_LDFLAGS = -R$(GMP_HOME)/lib -R$(FTIT_LDPATH)
 4ti2gap_la_LDFLAGS += -module -avoid-version
 4ti2gap_la_LIBADD = $(FTIT_LDFLAGS) -lzsolve @FTITLIB@
-if WITH_GMP
+if WITH_GMPXX
 4ti2gapgmp_la_SOURCES = src/4ti2gapgmp.cc
 4ti2gapgmp_la_CPPFLAGS = $(GAP_CPPFLAGS) $(GMP_FLAGS) -DCONFIG_H $(FTIT_CPPFLAGS) -D_4ti2_GMP_
 4ti2gapgmp_la_LDFLAGS = $(4ti2gap_la_LDFLAGS)
@@ -42,7 +42,7 @@ $(GAPINSTLIB): 4ti2gap.la
 	$(mkdir_p) $(BINARCHDIR)
 	cp .libs/4ti2gap.so $(GAPINSTLIB)
 
-if WITH_GMP
+if WITH_GMPXX
 $(GAPGMPINSTLIB): 4ti2gapgmp.la
 	cp .libs/4ti2gapgmp.so $(GAPGMPINSTLIB)
 endif
