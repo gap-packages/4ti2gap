@@ -78,6 +78,7 @@ done
 AC_SUBST(gmp_found)
 AC_SUBST(gmpxx_found)
 if test "x$gmp_found" != "xyes"; then
+    gmpxx_found="no"
     AC_MSG_RESULT(not found)
     ifelse([$2], , :, [$2])
 elif test "x$gmpxx_found" != "xyes"; then

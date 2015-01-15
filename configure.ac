@@ -75,7 +75,6 @@ else
     AC_MSG_WARN([4ti2gap will be built without support for arbitrary-precision computations.])
 fi
 ])
-echo "Valor de GMP_LIBS: ${GMP_LIBS}"
 if test ! -z "${GMP_LIBS}"; then
     AC_MSG_CHECKING(for GMP support in 4ti2)
     BACKUP_CPPFLAGS=${CPPFLAGS}
