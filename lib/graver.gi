@@ -1,18 +1,17 @@
-#! @Chapter Hilbert bases
-#! In this section we show how to interact with <C>hilbert</C> in <C>4ti2<C>
+#! @Chapter Graver bases
+#! In this section we show how to interact with <C>graver</C> in <C>4ti2<C>
 
 
 #! @Description
-#! Computes a Hilbert basis of the cone or by a monoid.
+#! Computes a Graver basis of a matrix or a lattice.
 #! The input argument <A>a</a> is a list with structure: 
 #! [ <type>, <list>, <type>, <list>, ... ]. 
 #! <type> is a text string, with possible values: 
-#! "mat", "lat", "sign", "rel", "ub", to
-#! describe (see documentation at http://www.4ti2.de) the contents of each 
-#! matrix, given as a GAP <list>.
+#! "mat", "lat" to describe (see documentation at http://www.4ti2.de) 
+#! the contents of each matrix, given as a GAP <list>.
 #! @Returns a list with elements of the basis.
 #! @Arguments a
-InstallGlobalFunction(HilbertBasis4ti2, function(arg)
+InstallGlobalFunction(GraverBasis4ti2, function(arg)
     local a, narg, pos;
 
     narg:=Length(arg);
@@ -28,7 +27,7 @@ InstallGlobalFunction(HilbertBasis4ti2, function(arg)
         if First(Flat(a[pos+1]),n->GMP_REDUCE(n)<>fail) <> fail then
             Error("The size of the input suggest to use the GMP version of this function");
         fi;
-        return _4ti2_Hilbert(a);
+        return _4ti2_Graver(a);
     fi;
     Error("Wrong number of arguments");
 end);

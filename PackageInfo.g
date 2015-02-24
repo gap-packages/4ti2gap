@@ -74,6 +74,7 @@ Keywords := [
   "4ti2",
   "groebner",
   "hilbert",
+  "graver",
 ],
 
 #TestFile := "tst/testall.g",

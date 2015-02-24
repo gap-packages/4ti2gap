@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <cstring>
+#include <new>
 
 #include "4ti2gap.h"
 
@@ -16,6 +17,7 @@
 #include "zsolve/Exception.h"
 #include "zsolve/VectorArrayAPI.hpp"
 #include "zsolve/HilbertAPI.hpp"
+#include "zsolve/GraverAPI.hpp"
 
 bool GAPInt2IntegerType( Obj ival, IntegerType& oval )
 {
@@ -217,13 +219,22 @@ Obj _4ti2_Hilbert( Obj self, Obj list )
             return Fail;
         }
     }
+        char arg1[]="-q";
+#ifdef _4ti2_INT64_
+        char arg2[]="-p=64";
+#endif
+#ifdef _4ti2_INT32_
+        char arg2[]="-p=32";
+#endif
+        char **argopt;
+	argopt = new char* [3];
+        argopt[1] = arg1;
+        argopt[2] = arg2;
+        problem.set_options( 3, argopt );
+std::cout << argopt[1] << " --- y --- " << argopt[2] << std::endl;
+        delete[] argopt;
 
     try {
-        char *argopt[2];
-        argopt[1] = new char[3];
-        strcpy( argopt[1], "-q" );
-        problem.set_options( 2, argopt );
-        delete argopt[1];
         problem.compute();
     }
     catch ( _4ti2_zsolve_::PrecisionException e )
@@ -258,6 +269,107 @@ Obj _4ti2_Hilbert( Obj self, Obj list )
     return hilListGAP;
 }
 
+Obj _4ti2_Graver( Obj self, Obj list )
+{
+    // This code is similar to NormalizInterface's input processing
+    int n = LEN_PLIST( list );
+
+    if ( n & 1 ) {
+        std::cerr << "Input list must have even number of elements.\n" << std::endl;
+        return Fail;
+    }
+    
+    std::string st;
+
+#ifdef _4ti2_INT64_
+    _4ti2_zsolve_::GraverAPI<_4ti2_int64_t> problem;
+#endif
+
+#ifdef _4ti2_INT32_
+    _4ti2_zsolve_::GraverAPI<_4ti2_int32_t> problem;
+#endif
+
+    for (int i = 0; i < n; i += 2) {
+        Obj type = ELM_PLIST( list, i+1 );
+        if ( ! IS_STRING( type ) ) {
+            std::cerr << "Element " << i+1 << " of the input list must be a type string" << std::endl;
+            return Fail;
+        }
+        std::string stinty( CSTR_STRING(type) );
+
+        Obj inel = ELM_PLIST( list, i+2 );
+        if ( !IS_LIST( inel ) ) {
+            std::cerr << "Element " << i+2 << " must be a vector or a matrix.\n";
+            return Fail;
+        }
+        if ( ! GAPMatrix2StdString( inel, st ) ) {
+            std::cerr << "Unable to proccess element " << i+2 << " of the input list" << std::endl;
+            return Fail;
+        }
+        std::istringstream ists( st );
+        // ists.str( st );
+        
+        if ( ! problem.create_matrix( ists, stinty.c_str() ) ) {
+            std::cerr << "4ti2 can not create the input matrix: " << stinty.c_str() << std::endl;
+            std::cerr << st;
+            return Fail;
+        }
+    }
+        char arg1[]="-q";
+#ifdef _4ti2_INT64_
+        char arg2[]="-p=64";
+#endif
+#ifdef _4ti2_INT32_
+        char arg2[]="-p=32";
+#endif
+        char **argopt;
+	argopt = new char* [3];
+        argopt[1] = arg1;
+        argopt[2] = arg2;
+        problem.set_options( 3, argopt );
+std::cout << argopt[1] << " --- y --- " << argopt[2] << std::endl;
+        delete[] argopt;
+
+    try {
+        problem.compute();
+    }
+    catch ( _4ti2_zsolve_::PrecisionException e )
+    {
+        std::cerr << "Results were near maximum precision (" << e.precision () << "bit).\n";
+        std::cerr << "Please use the multiple precision version of this function!" << std::endl;
+        return Fail;
+    }
+    catch ( _4ti2_zsolve_::IOException e )
+    {
+        std::cerr << e;
+        return Fail;
+    }
+
+#ifdef _4ti2_INT64_
+    _4ti2_zsolve_::VectorArrayAPI<_4ti2_int64_t> *grabas =  (_4ti2_zsolve_::VectorArrayAPI<_4ti2_int64_t> *) problem.get_matrix( "gra" );
+#endif
+#ifdef _4ti2_INT32_
+    _4ti2_zsolve_::VectorArrayAPI<_4ti2_int32_t> *grabas =  (_4ti2_zsolve_::VectorArrayAPI<_4ti2_int64_t> *) problem.get_matrix( "gra" );
+#endif
+    Obj graListGAP;
+    size_t numRows = grabas->get_num_rows();
+    size_t numCols = grabas->get_num_cols();
+
+    graListGAP = NEW_PLIST( T_PLIST, numRows );
+    SET_LEN_PLIST( graListGAP, numRows );
+    for ( size_t i = 0; i < numRows; i++ ) {
+        Obj lisGAP = NEW_PLIST( T_PLIST, numCols );
+    	SET_LEN_PLIST( lisGAP, numCols );
+        for ( size_t j = 0; j < numCols; j++ ) {
+            SET_ELM_PLIST( lisGAP, j+1, ObjInt_Int( grabas->data[i][j] ) );
+            CHANGED_BAG( lisGAP );
+        }
+        SET_ELM_PLIST( graListGAP, i+1, lisGAP );
+        CHANGED_BAG( graListGAP );
+    }
+    return graListGAP;
+}
+
 typedef Obj (* GVarFunc)(/*arguments*/);
 
 #define GVAR_FUNC_TABLE_ENTRY(srcfile, name, nparam, params) \
@@ -271,6 +383,7 @@ static StructGVarFunc GVarFuncs[] = {
     GVAR_FUNC_TABLE_ENTRY("4ti2gap.cc", _4ti2_GroebnerBasisOrder, 2, "list, list"),
     GVAR_FUNC_TABLE_ENTRY("4ti2gap.cc", _4ti2_GroebnerBasis, 1, "list"),
     GVAR_FUNC_TABLE_ENTRY("4ti2gap.cc", _4ti2_Hilbert, 1, "list"),
+    GVAR_FUNC_TABLE_ENTRY("4ti2gap.cc", _4ti2_Graver, 1, "list"),
 //    GVAR_FUNC_TABLE_ENTRY("4ti2hilbert.cc", _4ti2_gmp, 1, "x"),
     { 0 } /* Finish with an empty entry */
 

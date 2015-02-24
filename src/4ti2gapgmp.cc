@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <new>
 // #include <cstring>
 
 #include "4ti2gapgmp.h"
@@ -17,6 +18,7 @@
 #include "zsolve/Exception.h"
 #include "zsolve/VectorArrayAPI.hpp"
 #include "zsolve/HilbertAPI.hpp"
+#include "zsolve/GraverAPI.hpp"
 
 bool GAPInt2IntegerTypeMpz( Obj ival, IntegerType& oval )
 {
@@ -270,12 +272,16 @@ Obj _4ti2_HilbertGMP( Obj self, Obj list )
         }
     }
 
+        char arg1[]="-q";
+        char arg2[]="-p=gmp";
+        char **argopt;
+	argopt = new char* [3];
+        argopt[1] = arg1;
+        argopt[2] = arg2;
+        problem.set_options( 3, argopt );
+std::cout << argopt[1] << " --- y --- " << argopt[2] << std::endl;
+        delete[] argopt;
     try {
-        char *argopt[2];
-        argopt[1] = new char[3];
-        strcpy( argopt[1], "-q" );
-        problem.set_options( 2, argopt );
-        delete argopt[1];
         problem.compute();
     }
     catch ( _4ti2_zsolve_::PrecisionException e )
@@ -291,7 +297,7 @@ Obj _4ti2_HilbertGMP( Obj self, Obj list )
         return Fail;
     }
 
-    _4ti2_zsolve_::VectorArrayAPI<mpz_class> *hilbas =  (_4ti2_zsolve_::VectorArrayAPI<mpz_class> *) problem.get_matrix( "zhom" );
+    _4ti2_zsolve_::VectorArrayAPI<mpz_class> *hilbas = (_4ti2_zsolve_::VectorArrayAPI<mpz_class> *) problem.get_matrix( "zhom" );
     Obj hilListGAP;
     size_t numRows = hilbas->get_num_rows();
     size_t numCols = hilbas->get_num_cols();
@@ -311,6 +317,91 @@ Obj _4ti2_HilbertGMP( Obj self, Obj list )
     return hilListGAP;
 }
 
+Obj _4ti2_GraverGMP( Obj self, Obj list )
+{
+    // This code is similar to NormalizInterface's input processing
+    int n = LEN_PLIST( list );
+
+    if ( n & 1 ) {
+        std::cerr << "Input list must have even number of elements.\n" << std::endl;
+        return Fail;
+    }
+
+    
+    std::string st;
+    _4ti2_zsolve_::GraverAPI<mpz_class> problem;
+
+    for (int i = 0; i < n; i += 2) {
+        Obj type = ELM_PLIST( list, i+1 );
+        if ( ! IS_STRING( type ) ) {
+            std::cerr << "Element " << i+1 << " of the input list must be a type string" << std::endl;
+            return Fail;
+        }
+        std::string stinty( CSTR_STRING(type) );
+
+        Obj inel = ELM_PLIST( list, i+2 );
+        if ( !IS_LIST( inel ) ) {
+            std::cerr << "Element " << i+2 << " must be a vector or a matrix.\n";
+            return Fail;
+        }
+        if ( ! GAPMatrixMpz2StdString( inel, st ) ) {
+            std::cerr << "Unable to proccess element " << i+2 << " of the input list" << std::endl;
+            return Fail;
+        }
+        std::istringstream ists( st );
+        // ists.str( st );
+        
+        if ( ! problem.create_matrix( ists, stinty.c_str() ) ) {
+            std::cerr << "4ti2 can not create the input matrix: " << stinty.c_str() << std::endl;
+            std::cerr << st;
+            return Fail;
+        }
+    }
+        char arg1[]="-q";
+        char arg2[]="-p=gmp";
+        char **argopt;
+	argopt = new char* [3];
+        argopt[1] = arg1;
+        argopt[2] = arg2;
+        problem.set_options( 3, argopt );
+        delete[] argopt;
+
+    try {
+        problem.compute();
+    }
+    catch ( _4ti2_zsolve_::PrecisionException e )
+    {
+        std::cerr << "Results were near maximum precision (" << e.precision () << "bit).\n";
+        std::cerr << "Please restart with higher precision!" << std::endl;
+        std::cerr << "...., but wait, this is not available as an option yet. We are wonking on it..." << std::endl;
+        return Fail;
+    }
+    catch ( _4ti2_zsolve_::IOException e )
+    {
+        std::cerr << e;
+        return Fail;
+    }
+
+    _4ti2_zsolve_::VectorArrayAPI<mpz_class> *grabas =  (_4ti2_zsolve_::VectorArrayAPI<mpz_class> *) problem.get_matrix( "gra" );
+    Obj graListGAP;
+    size_t numRows = grabas->get_num_rows();
+    size_t numCols = grabas->get_num_cols();
+
+    graListGAP = NEW_PLIST( T_PLIST, numRows );
+    SET_LEN_PLIST( graListGAP, numRows );
+    for ( size_t i = 0; i < numRows; i++ ) {
+        Obj lisGAP = NEW_PLIST( T_PLIST, numCols );
+    	SET_LEN_PLIST( lisGAP, numCols );
+        for ( size_t j = 0; j < numCols; j++ ) {
+            SET_ELM_PLIST( lisGAP, j+1, IntegerTypeMpz2GAP( grabas->data[i][j] ) );
+            CHANGED_BAG( lisGAP );
+        }
+        SET_ELM_PLIST( graListGAP, i+1, lisGAP );
+        CHANGED_BAG( graListGAP );
+    }
+    return graListGAP;
+}
+
 typedef Obj (* GVarFunc)(/*arguments*/);
 
 #define GVAR_FUNC_TABLE_ENTRY(srcfile, name, nparam, params) \
@@ -320,10 +411,11 @@ typedef Obj (* GVarFunc)(/*arguments*/);
    srcfile ":Func" #name }
 
 // Table of functions to export
-static StructGVarFunc GVarFuncs[] = {
+static StructGVarFunc GVarFuncsgmp[] = {
     GVAR_FUNC_TABLE_ENTRY("4ti2gapgmp.cc", _4ti2_GroebnerBasisOrderGMP, 2, "list, list"),
     GVAR_FUNC_TABLE_ENTRY("4ti2gapgmp.cc", _4ti2_GroebnerBasisGMP, 1, "list"),
     GVAR_FUNC_TABLE_ENTRY("4ti2gapgmp.cc", _4ti2_HilbertGMP, 1, "list"),
+    GVAR_FUNC_TABLE_ENTRY("4ti2gapgmp.cc", _4ti2_GraverGMP, 1, "list"),
     { 0 } /* Finish with an empty entry */
 
 };
@@ -334,7 +426,7 @@ static StructGVarFunc GVarFuncs[] = {
 static Int InitKernel( StructInitInfo *module )
 {
     /* init filters and functions                                          */
-    InitHdlrFuncsFromTable( GVarFuncs );
+    InitHdlrFuncsFromTable( GVarFuncsgmp );
 
     /* return success                                                      */
     return 0;
@@ -346,7 +438,7 @@ static Int InitKernel( StructInitInfo *module )
 static Int InitLibrary( StructInitInfo *module )
 {
     /* init filters and functions */
-    InitGVarFuncsFromTable( GVarFuncs );
+    InitGVarFuncsFromTable( GVarFuncsgmp );
 
     /* return success                                                      */
     return 0;
@@ -355,7 +447,7 @@ static Int InitLibrary( StructInitInfo *module )
 /******************************************************************************
 *F  InitInfopl()  . . . . . . . . . . . . . . . . . table of init functions
 */
-static StructInitInfo module = {
+static StructInitInfo modulegmp = {
 #ifdef FTITSTATIC
  /* type        = */ MODULE_STATIC,
 #else
@@ -378,13 +470,13 @@ static StructInitInfo module = {
 extern "C"
 StructInitInfo * Init__Dynamic ( void )
 {
-  return &module;
+  return &modulegmp;
 }
 #endif
 
 extern "C"
-StructInitInfo * Init__4ti2 ( void )
+StructInitInfo * Init__4ti2gmp ( void )
 {
-    return &module;
+    return &modulegmp;
 }
 
