@@ -279,7 +279,6 @@ Obj _4ti2_HilbertGMP( Obj self, Obj list )
         argopt[1] = arg1;
         argopt[2] = arg2;
         problem.set_options( 3, argopt );
-std::cout << argopt[1] << " --- y --- " << argopt[2] << std::endl;
         delete[] argopt;
     try {
         problem.compute();
