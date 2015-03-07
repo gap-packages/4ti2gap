@@ -1,4 +1,4 @@
-The GAP 4 package `4ti2gap
+The GAP 4 package `4ti2gap`
 ===========================
 
 1 Package description
