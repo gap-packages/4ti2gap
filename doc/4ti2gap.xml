@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This is an automatically generated file. -->
+<!DOCTYPE Book SYSTEM "gapdoc.dtd">
+<Book Name="4ti2gap">
+
+  <TitlePage>
+    <Title>
+      4ti2gap
+    </Title>
+    <Subtitle>
+      &GAP; wraper for 4ti2
+    </Subtitle>
+    <Version>
+      0.0.2
+    </Version>
+    
+    <Author>
+      Alfredo Sánchez-R.-Navarro<Alt Only="LaTeX"><Br/></Alt>
+      <Address>
+	Jerez de La Frontera <Br/>
+      </Address>
+      <Email>alfredo.sanchez@uca.es</Email>
+      <Homepage>www.uca.es</Homepage>
+    </Author>
+    
+    <Author>
+      Pedro A. García-Sánchez<Alt Only="LaTeX"><Br/></Alt>
+      <Address>
+	Campus Fuentenueva s/n<Br/>
+      </Address>
+      <Email>pedro@ugr.es</Email>
+      <Homepage>http://www.ugr.es/local/pedro</Homepage>  
+    </Author>
+    
+    <Date>
+      06/03/2015
+    </Date>
+    
+  </TitlePage>
+  
+  
+  <TableOfContents/>
+  <Body>
+
+    
+    <Chapter>
+      <Heading>
+	Introduction
+      </Heading>
+      How it was done, and why.
+    </Chapter>
+
+    <Chapter>
+      <Heading>
+	Functions
+      </Heading>
+      Lala
+
+      <Section>
+	<Heading>
+	  Groebner
+	</Heading>
+	<ManSection>
+	  <Func Name="GroebnerBasis4ti2" Arg="List, Order"/>
+	  <Description>
+	    <C>List</C> is a matrix of integers and <C>Order</C> is the ordering used to compute a Gröbner basis. The ordering may be one of the following: <A>lex</A>, <A>grlex</A>, <A>grevlex</A> or a matrix specifying an ordering.
+	    The second argument is optional.
+	    <P/>
+	    This function calls <A>groebner</A> from <A>4ti2</A>. Notice that we are not using cost function. The output is a matrix containing the differences of the exponents of the binomials of the Gröbner basis of the ideal that is the kernel of the mapping that maps the variable <M>x_i</M> to the monomial with exponent the column of the first argument. 
+	    <P/>
+	    <Example><![CDATA[
+gap> GroebnerBasis4ti2([[3,5,7]],[[3,5,7]]);
+[ [ -4, 1, 1 ], [ -3, -1, 2 ], [ -1, 2, -1 ] ]
+gap> GroebnerBasis4ti2gmp([[5, 21, 23, 26, 69]]);        
+[ [ -13, 2, 1, 0, 0 ], [ -8, 3, -1, 0, 0 ], [ -5, -1, -1, 0, 1 ], 
+  [ -5, -1, 2, 0, 0 ], [ -1, -1, 0, 1, 0 ] ]
+gap> GroebnerBasis4ti2([[3,5,7]],"lex");    
+[ [ 0, 7, -5 ], [ 1, -2, 1 ], [ 1, 5, -4 ], [ 2, 3, -3 ], [ 3, 1, -2 ], 
+[ 4, -1, -1 ] ]
+gap> GroebnerBasis4ti2([[3,5,7]],"grevlex");
+[ [ -1, 2, -1 ], [ 3, 1, -2 ], [ 4, -1, -1 ] ]
+gap> GroebnerBasis4ti2([[3,5,7]],"grlex");  
+[ [ 0, 7, -5 ], [ 1, -2, 1 ], [ 1, 5, -4 ], [ 2, 3, -3 ], [ 3, 1, -2 ], 
+[ 4, -1, -1 ] ]
+             ]]></Example>
+	  </Description>
+	</ManSection>
+
+      </Section>
+    </Chapter>
+    
+
+    <Chapter>
+      <Heading>
+	Primer capítulo
+      </Heading>
+      Lala
+    </Chapter>
+
+
+    <Chapter>
+      <Heading>
+	Primer capítulo
+      </Heading>
+      Lala
+    </Chapter>
+
+  </Body>
+  
+  
+  <TheIndex/>
+</Book>

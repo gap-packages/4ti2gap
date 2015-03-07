@@ -3,70 +3,80 @@ SetPackageInfo( rec(
 PackageName := "4ti2gap",
 Subtitle := "GAP wraper for 4ti2",
 Version := "0.0.2",
-Date    := "9/1/2015", # dd/mm/yyyy format
+Date    := "06/03/2015", # dd/mm/yyyy format
 
 Persons := [
   rec(
-    LastName      := "",
-    FirstNames    := "",
+    LastName      := "Sánchez-R.-Navarro",
+    FirstNames    := "Alfredo",
     IsAuthor      := true,
     IsMaintainer  := true,
-    Email         := "@",
-    WWWHome       := "",
+    Email         := "alfredo.sanchez@uca.es",
+    WWWHome       := "www.uca.es",
     PostalAddress := Concatenation(
-                       "\n",
-                       "\n",
-                       "\n",
+                       "Jerez de La Frontera \n",
                        "" ),
-    Place         := "",
-    Institution   := ""
+    Place         := "Jerez",
+    Institution   := "Universidad de Cádiz"
   ),
+  rec(
+    LastName      := "García-Sánchez",
+    FirstNames    := "Pedro A.",
+    IsAuthor      := true,
+    IsMaintainer  := true,
+    Email         := "pedro@ugr.es",
+    WWWHome       := "http://www.ugr.es/local/pedro",
+    PostalAddress := Concatenation(
+                       "Campus Fuentenueva s/n",
+                       "" ),
+    Place         := "Departamento de Álgebra",
+    Institution   := "Universidad de Granada"
+  )
 ],
 
 Status         := "dev",
 #CommunicatedBy := "name (place)",
 #AcceptDate     := "mm/yyyy",
 
-PackageWWWHome := "",
+PackageWWWHome := "https://bitbucket.org/gap-system/4ti2gap",
 
 #ArchiveFormats := ".tar.gz tar.bz2",
 #ArchiveURL     := Concatenation("",
 #                                "releases/download/v", ~.Version,
 #                                "/4ti2gap-", ~.Version),
-#README_URL     := Concatenation( ~.PackageWWWHome, "README" ),
-#PackageInfoURL := Concatenation( ~.PackageWWWHome, "PackageInfo.g" ),
+README_URL     := Concatenation( ~.PackageWWWHome, "README" ),
+PackageInfoURL := Concatenation( ~.PackageWWWHome, "PackageInfo.g" ),
 
-#AbstractHTML   := Concatenation(
-#               "The 4ti2gap Package ... ",
-#               "TODO"),
+AbstractHTML   := Concatenation(
+               "The 4ti2gap Package ... ",
+               "TODO"),
 
-#PackageDoc := rec(
-#  BookName  := "4ti2gap",
-#  ArchiveURLSubset := [ "doc" ],
-#  HTMLStart := "doc/chap0_mj.html",
-#  PDFFile   := "doc/manual.pdf",
-#  SixFile   := "doc/manual.six",
-#  LongTitle := "GAP wrapper for 4ti2",
-#  Autoload  := true
-#),
+PackageDoc := rec(
+ BookName  := ~.PackageName,
+ ArchiveURLSubset := [ "doc" ],
+ HTMLStart := "doc/chap0.html",
+ PDFFile   := "doc/manual.pdf",
+ SixFile   := "doc/manual.six",
+ LongTitle := ~.Subtitle,
+),
 
 Dependencies := rec(
   GAP                    := ">= 4.7",
   NeededOtherPackages    := [ ],
   SuggestedOtherPackages := [ ],
-  ExternalConditions     := [ ]
+  ExternalConditions     := [ ],
 ),
 
 AvailabilityTest := function()
     local path;
-    # test for existence of the compiled binary
+            # test for existence of the compiled binary
     path := DirectoriesPackagePrograms("4ti2gap");
     if not "4ti2gap" in SHOW_STAT() and
        Filename(path, "4ti2gap.so") = fail then
-      return fail;
+        return fail;
     fi;
     return true;
-  end,
+end,
 
 Autoload := false,
 
