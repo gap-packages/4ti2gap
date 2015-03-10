@@ -7,19 +7,6 @@ Date    := "06/03/2015", # dd/mm/yyyy format
 
 Persons := [
   rec(
-    LastName      := "Sánchez-R.-Navarro",
-    FirstNames    := "Alfredo",
-    IsAuthor      := true,
-    IsMaintainer  := true,
-    Email         := "alfredo.sanchez@uca.es",
-    WWWHome       := "www.uca.es",
-    PostalAddress := Concatenation(
-                       "Jerez de La Frontera",
-                       "" ),
-    Place         := "Departamento de Ingeniería Informática",
-    Institution   := "Universidad de Cádiz"
-  ),
-  rec(
     LastName      := "García-Sánchez",
     FirstNames    := "Pedro A.",
     IsAuthor      := true,
@@ -31,6 +18,19 @@ Persons := [
                        "" ),
     Place         := "Departamento de Álgebra",
     Institution   := "Universidad de Granada"
+  ),
+  rec(
+    LastName      := "Sánchez-R.-Navarro",
+    FirstNames    := "Alfredo",
+    IsAuthor      := true,
+    IsMaintainer  := true,
+    Email         := "alfredo.sanchez@uca.es",
+    WWWHome       := "",
+    PostalAddress := Concatenation(
+                       "Jerez de La Frontera",
+                       "" ),
+    Place         := "Departamento de Ingeniería Informática",
+    Institution   := "Universidad de Cádiz"
   )
 ],
 
@@ -85,6 +85,7 @@ Keywords := [
   "groebner",
   "hilbert",
   "graver",
+  "zsolve",
 ],
 
 #TestFile := "tst/testall.g",

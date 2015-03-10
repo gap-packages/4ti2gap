@@ -41,18 +41,17 @@ doc:	doc/manual.six
 
 clean-doc:
 	rm -f doc/manual.*
-	rm -f doc/4ti2gap.*
-	rm -f doc/*.{bib,css,html,js,txt}
-	find doc/ -type f -name *.xml -and \( -not -name '4ti2gap-bib.xml' \) -delete
+	rm -f doc/*.{idx,bbl,aux,blg,ilg,ind,log,out,pnr,tex,toc,bib,css,html,js,txt}
+	find doc/ -type f -name *.xml -and \( -not -name '4ti2gap.xml' \) -delete
 
 DOC_FILES = \
 	PackageInfo.g \
 	doc/*.autodoc \
-	doc/*.xml
-#	src/4ti2gap.cc
-#	lib/4ti2gap.gd
-#    examples/*.g \
-#	makedoc.g
+	doc/*.xml \
+	src/*.cc \
+	lib/*.gd \
+	makedoc.g
+#    examples/*.g 
 
 doc/manual.six: $(DOC_FILES)
 	($(GAPROOT)/bin/gap.sh -A makedoc.g)
