@@ -14,9 +14,9 @@ Persons := [
     Email         := "alfredo.sanchez@uca.es",
     WWWHome       := "www.uca.es",
     PostalAddress := Concatenation(
-                       "Jerez de La Frontera \n",
+                       "Jerez de La Frontera",
                        "" ),
-    Place         := "Jerez",
+    Place         := "Departamento de Ingeniería Informática",
     Institution   := "Universidad de Cádiz"
   ),
   rec(

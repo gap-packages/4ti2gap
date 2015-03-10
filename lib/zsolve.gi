@@ -1,19 +1,21 @@
-#! @Chapter Hilbert bases
-#! In this section we show how to interact with <C>hilbert</C> in <C>4ti2<C>
+#! @Chapter ZSolve
+#! In this section we show how to interact with <C>zsolve</C> in <C>4ti2<C>
 
 
 #! @Description
-#! Computes a Hilbert basis of the cone or by a monoid
+#! Computes the solutions of a linear system over the set of the integers
 #! The input argument <A>a</a> is a list with structure: 
 #! [ <type>, <list>, <type>, <list>, ... ] 
 #! <type> is a text string, with possible values: 
 #! "mat", "lat", "sign", "rel", "ub", to
-#! describe (see documentation at http://www.4ti2.de) the contents of each 
+#! describe (see documentation at http://www.4ti2.de and/or the file 
+#! 4ti2_manual.pdf in 4ti2 installation tree) the contents of each 
 #! matrix, given as a GAP <list>
-#! @Returns a list with elements of the basis
+#! @Returns a record with description of all solutions, with the selectors:
+#! zinhom, zhom, zfree 
 #! @Arguments a
-InstallGlobalFunction(HilbertBasis4ti2, function(arg)
-    local a, narg, pos;
+InstallGlobalFunction(ZSolve4ti2, function(arg)
+    local a, narg, pos, result, recresult;
 
     narg:=Length(arg);
     if narg>0 then
@@ -28,7 +30,13 @@ InstallGlobalFunction(HilbertBasis4ti2, function(arg)
         if First(Flat(a[pos+1]),n->GMP_REDUCE(n)<>fail) <> fail then
             Error("The size of the input suggest to use the GMP version of this function");
         fi;
-        return _4ti2zsolve_Hilbert(a);
+        result:=_4ti2zsolve_ZSolve(a);
+        if Length(result)>2 then
+            recresult:=rec(zinhom:=result[1], zhom:=result[2], zfree:=result[3]);
+        else
+            recresult:=rec(zinhom:=result[1], zhom:=result[2]);
+        fi;
+        return recresult;
     fi;
     Error("Wrong number of arguments");
 end);

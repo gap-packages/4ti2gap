@@ -22,12 +22,12 @@ InstallGlobalFunction(GroebnerBasis4ti2, function(arg)
             Error("The argument must be a matrix of integers");
         fi;
 
-        if First(Flat(a),n->GMP_REDUCE(n)<>fail) <> fail then
-            Error("The size of the input suggest to use the GMP version of this function");
-        fi;
+#!        if First(Flat(a),n->GMP_REDUCE(n)<>fail) <> fail then
+#!            Error("The size of the input suggest to use the GMP version of this function");
+#!        fi;
 
         if narg=1 then
-            return _4ti2_GroebnerBasis(a);
+            return _4ti2groebner_GroebnerBasis(a);
         fi;
 
         cols:=Length(a[1]);
@@ -59,7 +59,7 @@ InstallGlobalFunction(GroebnerBasis4ti2, function(arg)
                 Error("The matrix representing the ordering must have full rank.");
             fi;
 
-            return _4ti2_GroebnerBasisOrder(a, c);
+            return _4ti2groebner_GroebnerBasisOrder(a, c);
         fi;
     fi;
     Error("Wrong number of arguments");
