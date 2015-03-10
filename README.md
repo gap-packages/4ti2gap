@@ -55,6 +55,8 @@ Finally go to 4ti2gap folder and do
 
 So far a limited groebner and hilbert are included. 
 
+### Gröbner bases
+
 groebner is called in the following way:
 
 `GroebnerBasis4ti2( matrix , order )`, where matrix is a matrix with integer entries and order is either an order matrix or "lex", "grlex" "grevlex".
@@ -80,7 +82,7 @@ gap> GroebnerBasis4ti2([[3,5,7]],"grlex");
 ```
 If GMP is installed, `GroebnerBasis4ti2gmp( matrix , order )` uses integer multiple precision arithmetic.
 
-----------
+### Hilbert bases
 
 hilbert actually only returns the homogenous output. It is called in the following way:
 
@@ -114,6 +116,43 @@ HilbertBasis4ti2(problem);
 ```
 
 If GMP is installed, `HilbertBasis4ti2gmp( problem )` uses integer multiple precision arithmetic.
+
+### Graver bases
+
+graver actually only returns the homogenous output. It is called in the following way:
+GraverBasis4ti2( problem ), where problem is a list to specify the input components of the "problem" (see the 4ti2 manual):
+
+```gap
+gap> problem:=["mat", [[1, 1, 1, 1, 1], [1, 2, 3, 4, 5]]];; GraverBasis4ti2( problem );
+
+[ [ 1, -2, 1, 0, 0 ], [ 2, -3, 0, 1, 0 ], [ 3, -4, 0, 0, 1 ], 
+  [ 1, -1, -1, 1, 0 ], [ 2, -2, -1, 0, 1 ], [ 1, -1, 0, -1, 1 ], 
+  [ 0, 1, -2, 1, 0 ], [ 0, 1, -1, -1, 1 ], [ 1, 0, -2, 0, 1 ], 
+  [ 1, -2, 0, 2, -1 ], [ 0, 0, 1, -2, 1 ], [ 1, 0, -1, -2, 2 ], 
+  [ 0, 1, 0, -3, 2 ], [ 1, 0, -3, 2, 0 ], [ 1, 0, 0, -4, 3 ], 
+  [ 0, 2, -3, 0, 1 ] ]
+```
+  
+If GMP is installed, `GraverBasis4ti2gmp( problem )` uses integer multiple precision arithmetic.
+
+### ZSolve 
+
+zsolve performs the same computations as 4ti2 the command line version. Its input is expressed the same way as GraverBasis4ti2 and HilbertBasis4ti2. The output is a record with the components that gives the explicit description of all solutions (see the 4ti2 manual):
+
+```gap
+gap> problem:=["mat",[[0, 0, 0, 0, 0, 3, -4, -1, 2], [0, 0, 0, 0, 1, -1, 1, 0, -1], [0, 0, 0, 1, 2, 0, 0, -1, -2], [0, 0, 1, 0, 1, 0, 0, -1, -1], [0, 1, 2, 0, 0, 0, 0, -1, -2], [1, 0, 2, 0, 0, 0, 0, -2, -1], [-2, 0, -2, 0, 0, 0, 0, 3, 0], [-2, 0, 0, 0, 0, 0, 0, 1, 0], [0, 0, -2, 0, 0, 0, 0, 1, 0], [0, 0, 0, 0, 0, 0, 0, -1, 0]], "rel", [[0, 0, 0, 0, 0, 0, -1, -1, -1, -1]], "sign", [[0, 0, 0, 0, 0, 0, 0, 0, 0]]];; ZSolve4ti2(problemzso);
+
+rec( zhom := [ [ 1, 0, 2, 2, 1, 0, 0, 2, 1 ], [ 2, 0, 1, 0, 1, 2, 1, 2, 0 ], 
+      [ 1, 2, 0, 0, 1, 2, 2, 0, 1 ], [ 1, 1, 1, 1, 1, 1, 1, 1, 1 ], 
+      [ 0, 2, 1, 2, 1, 0, 1, 0, 2 ] ], 
+  zinhom := [ [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ] ] )
+
+gap> ZSolve4ti2(["mat",[[0, 0]],"sign",[[0,0]]]);
+
+rec( zfree := [ [ 1, 0 ], [ 0, 1 ] ], zhom := [  ], zinhom := [ [ 0, 0 ] ] )
+```
+
+If GMP is installed, `ZSolve4ti2gmp( problem )` 
 
 4 Roadmap
 ---------

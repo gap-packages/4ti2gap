@@ -88,7 +88,10 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = x86_64-apple-darwin14.1.0
 host_triplet = x86_64-apple-darwin14.1.0
-am__append_1 = 4ti2gapgmp.la
+am__append_1 = $(GMP_FLAGS) -D_4ti2_WITH_GMP_ -D_4ti2_INT64_
+am__append_2 = -l4ti2gmp
+#am__append_3 = -D_4ti2_INT64_
+#am__append_4 = -l4ti2int64
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ac_find_gap.m4 \
@@ -137,9 +140,12 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
-4ti2gap_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
+4ti2gap_la_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 am__dirstamp = $(am__leading_dot)dirstamp
-am_4ti2gap_la_OBJECTS = src/4ti2gap_la-4ti2gap.lo
+am_4ti2gap_la_OBJECTS = src/4ti2gap_la-4ti2gap.lo \
+	src/4ti2gap_la-4ti2groebner.lo src/4ti2gap_la-4ti2zsolve.lo \
+	src/4ti2gap_la-basicxch.lo
 4ti2gap_la_OBJECTS = $(am_4ti2gap_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -148,16 +154,6 @@ am__v_lt_1 =
 4ti2gap_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(4ti2gap_la_LDFLAGS) $(LDFLAGS) -o $@
-4ti2gapgmp_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
-am__4ti2gapgmp_la_SOURCES_DIST = src/4ti2gapgmp.cc
-am_4ti2gapgmp_la_OBJECTS =  \
-	src/4ti2gapgmp_la-4ti2gapgmp.lo
-4ti2gapgmp_la_OBJECTS = $(am_4ti2gapgmp_la_OBJECTS)
-4ti2gapgmp_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
-	$(AM_CXXFLAGS) $(CXXFLAGS) $(4ti2gapgmp_la_LDFLAGS) $(LDFLAGS) \
-	-o $@
-am_4ti2gapgmp_la_rpath = -rpath $(libdir)
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -192,8 +188,8 @@ AM_V_CXXLD = $(am__v_CXXLD_$(V))
 am__v_CXXLD_ = $(am__v_CXXLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(4ti2gap_la_SOURCES) $(4ti2gapgmp_la_SOURCES)
-DIST_SOURCES = $(4ti2gap_la_SOURCES) $(am__4ti2gapgmp_la_SOURCES_DIST)
+SOURCES = $(4ti2gap_la_SOURCES)
+DIST_SOURCES = $(4ti2gap_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -474,6 +470,7 @@ LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = lipo
 LN_S = ln -s
 LTLIBOBJS = 
+LT_SYS_LIBRARY_PATH = 
 MAKEINFO = ${SHELL} /Users/pedro/Library/gap/4ti2gap/cnf/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /opt/local/bin/gmkdir -p
@@ -562,21 +559,21 @@ top_srcdir = .
 ACLOCAL_AMFLAGS = -I m4
 BINARCHDIR = bin/$(GAPARCH)
 GAPINSTLIB = $(BINARCHDIR)/4ti2gap.so
-GAPGMPINSTLIB = $(BINARCHDIR)/4ti2gapgmp.so
-lib_LTLIBRARIES = 4ti2gap.la $(am__append_1)
-4ti2gap_la_SOURCES = src/4ti2gap.cc
-4ti2gap_la_CPPFLAGS = $(GAP_CPPFLAGS) $(GMP_CPPFLAGS) -DCONFIG_H $(FTIT_CPPFLAGS) -D_4ti2_INT64_ 
+lib_LTLIBRARIES = 4ti2gap.la
+4ti2gap_la_SOURCES = src/4ti2gap.cc src/4ti2groebner.cc src/4ti2zsolve.cc src/basicxch.cc
+4ti2gap_la_CPPFLAGS = $(GAP_CPPFLAGS) -DCONFIG_H $(FTIT_CPPFLAGS) \
+	$(am__append_1) $(am__append_3)
 4ti2gap_la_LDFLAGS = -R$(GMP_HOME)/lib -R$(FTIT_LDPATH) -module \
-	-avoid-version
-4ti2gap_la_LIBADD = $(FTIT_LDFLAGS) -lzsolve -l4ti2int64
-4ti2gapgmp_la_SOURCES = src/4ti2gapgmp.cc
-4ti2gapgmp_la_CPPFLAGS = $(GAP_CPPFLAGS) $(GMP_FLAGS) -DCONFIG_H $(FTIT_CPPFLAGS) -D_4ti2_GMP_
-4ti2gapgmp_la_LDFLAGS = $(4ti2gap_la_LDFLAGS)
-4ti2gapgmp_la_LIBADD = $(FTIT_LDFLAGS) -lzsolve -l4ti2gmp
+	-avoid-version -z
+4ti2gap_la_LIBADD = $(FTIT_LDFLAGS) -lzsolve $(am__append_2) \
+	$(am__append_4)
 DOC_FILES = \
 	PackageInfo.g \
 	doc/*.autodoc \
-	doc/*.xml
+	doc/*.xml \
+	src/*.cc \
+	lib/*.gd \
+	makedoc.g
 
 AM_COLOR_TESTS = always
 TESTS_ENVIRONMENT = GAP_EXECUTABLE='$(GAPROOT)/bin/gap.sh'
@@ -677,14 +674,15 @@ src/$(DEPDIR)/$(am__dirstamp):
 	@: > src/$(DEPDIR)/$(am__dirstamp)
 src/4ti2gap_la-4ti2gap.lo: src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/4ti2gap_la-4ti2groebner.lo: src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/4ti2gap_la-4ti2zsolve.lo: src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/4ti2gap_la-basicxch.lo: src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 
 4ti2gap.la: $(4ti2gap_la_OBJECTS) $(4ti2gap_la_DEPENDENCIES) $(EXTRA_4ti2gap_la_DEPENDENCIES) 
 	$(AM_V_CXXLD)$(4ti2gap_la_LINK) -rpath $(libdir) $(4ti2gap_la_OBJECTS) $(4ti2gap_la_LIBADD) $(LIBS)
-src/4ti2gapgmp_la-4ti2gapgmp.lo: src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-
-4ti2gapgmp.la: $(4ti2gapgmp_la_OBJECTS) $(4ti2gapgmp_la_DEPENDENCIES) $(EXTRA_4ti2gapgmp_la_DEPENDENCIES) 
-	$(AM_V_CXXLD)$(4ti2gapgmp_la_LINK) $(am_4ti2gapgmp_la_rpath) $(4ti2gapgmp_la_OBJECTS) $(4ti2gapgmp_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -695,7 +693,9 @@ distclean-compile:
 	-rm -f *.tab.c
 
 include src/$(DEPDIR)/4ti2gap_la-4ti2gap.Plo
-include src/$(DEPDIR)/4ti2gapgmp_la-4ti2gapgmp.Plo
+include src/$(DEPDIR)/4ti2gap_la-4ti2groebner.Plo
+include src/$(DEPDIR)/4ti2gap_la-4ti2zsolve.Plo
+include src/$(DEPDIR)/4ti2gap_la-basicxch.Plo
 
 .cc.o:
 	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -728,12 +728,26 @@ src/4ti2gap_la-4ti2gap.lo: src/4ti2gap.cc
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(4ti2gap_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/4ti2gap_la-4ti2gap.lo `test -f 'src/4ti2gap.cc' || echo '$(srcdir)/'`src/4ti2gap.cc
 
-src/4ti2gapgmp_la-4ti2gapgmp.lo: src/4ti2gapgmp.cc
-	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(4ti2gapgmp_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/4ti2gapgmp_la-4ti2gapgmp.lo -MD -MP -MF src/$(DEPDIR)/4ti2gapgmp_la-4ti2gapgmp.Tpo -c -o src/4ti2gapgmp_la-4ti2gapgmp.lo `test -f 'src/4ti2gapgmp.cc' || echo '$(srcdir)/'`src/4ti2gapgmp.cc
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/4ti2gapgmp_la-4ti2gapgmp.Tpo src/$(DEPDIR)/4ti2gapgmp_la-4ti2gapgmp.Plo
-#	$(AM_V_CXX)source='src/4ti2gapgmp.cc' object='src/4ti2gapgmp_la-4ti2gapgmp.lo' libtool=yes \
+src/4ti2gap_la-4ti2groebner.lo: src/4ti2groebner.cc
+	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(4ti2gap_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/4ti2gap_la-4ti2groebner.lo -MD -MP -MF src/$(DEPDIR)/4ti2gap_la-4ti2groebner.Tpo -c -o src/4ti2gap_la-4ti2groebner.lo `test -f 'src/4ti2groebner.cc' || echo '$(srcdir)/'`src/4ti2groebner.cc
+	$(AM_V_at)$(am__mv) src/$(DEPDIR)/4ti2gap_la-4ti2groebner.Tpo src/$(DEPDIR)/4ti2gap_la-4ti2groebner.Plo
+#	$(AM_V_CXX)source='src/4ti2groebner.cc' object='src/4ti2gap_la-4ti2groebner.lo' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(4ti2gapgmp_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/4ti2gapgmp_la-4ti2gapgmp.lo `test -f 'src/4ti2gapgmp.cc' || echo '$(srcdir)/'`src/4ti2gapgmp.cc
+#	$(AM_V_CXX_no)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(4ti2gap_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/4ti2gap_la-4ti2groebner.lo `test -f 'src/4ti2groebner.cc' || echo '$(srcdir)/'`src/4ti2groebner.cc
+
+src/4ti2gap_la-4ti2zsolve.lo: src/4ti2zsolve.cc
+	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(4ti2gap_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/4ti2gap_la-4ti2zsolve.lo -MD -MP -MF src/$(DEPDIR)/4ti2gap_la-4ti2zsolve.Tpo -c -o src/4ti2gap_la-4ti2zsolve.lo `test -f 'src/4ti2zsolve.cc' || echo '$(srcdir)/'`src/4ti2zsolve.cc
+	$(AM_V_at)$(am__mv) src/$(DEPDIR)/4ti2gap_la-4ti2zsolve.Tpo src/$(DEPDIR)/4ti2gap_la-4ti2zsolve.Plo
+#	$(AM_V_CXX)source='src/4ti2zsolve.cc' object='src/4ti2gap_la-4ti2zsolve.lo' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(4ti2gap_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/4ti2gap_la-4ti2zsolve.lo `test -f 'src/4ti2zsolve.cc' || echo '$(srcdir)/'`src/4ti2zsolve.cc
+
+src/4ti2gap_la-basicxch.lo: src/basicxch.cc
+	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(4ti2gap_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/4ti2gap_la-basicxch.lo -MD -MP -MF src/$(DEPDIR)/4ti2gap_la-basicxch.Tpo -c -o src/4ti2gap_la-basicxch.lo `test -f 'src/basicxch.cc' || echo '$(srcdir)/'`src/basicxch.cc
+	$(AM_V_at)$(am__mv) src/$(DEPDIR)/4ti2gap_la-basicxch.Tpo src/$(DEPDIR)/4ti2gap_la-basicxch.Plo
+#	$(AM_V_CXX)source='src/basicxch.cc' object='src/4ti2gap_la-basicxch.lo' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(4ti2gap_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/4ti2gap_la-basicxch.lo `test -f 'src/basicxch.cc' || echo '$(srcdir)/'`src/basicxch.cc
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -1264,18 +1278,12 @@ uninstall-am: uninstall-libLTLIBRARIES
 .PRECIOUS: Makefile
 
 
-all-local: $(GAPINSTLIB) $(GAPGMPINSTLIB)
+all-local: $(GAPINSTLIB)
 	@echo "SUCCESS!"
-
-#all-local: $(GAPINSTLIB)
-#	@echo "SUCCESS!"
 
 $(GAPINSTLIB): 4ti2gap.la
 	$(mkdir_p) $(BINARCHDIR)
 	cp .libs/4ti2gap.so $(GAPINSTLIB)
-
-$(GAPGMPINSTLIB): 4ti2gapgmp.la
-	cp .libs/4ti2gapgmp.so $(GAPGMPINSTLIB)
 
 clean-local: clean-doc
 	rm -rf $(BINARCHDIR)
@@ -1287,13 +1295,9 @@ doc:	doc/manual.six
 
 clean-doc:
 	rm -f doc/manual.*
-	rm -f doc/4ti2gap.*
-	rm -f doc/*.{bib,css,html,js,txt}
-	find doc/ -type f -name *.xml -and \( -not -name '4ti2gap-bib.xml' \) -delete
-#	src/4ti2gap.cc
-#	lib/4ti2gap.gd
-#    examples/*.g \
-#	makedoc.g
+	rm -f doc/*.{idx,bbl,aux,blg,ilg,ind,log,out,pnr,tex,toc,bib,css,html,js,txt}
+	find doc/ -type f -name *.xml -and \( -not -name '4ti2gap.xml' \) -delete
+#    examples/*.g 
 
 doc/manual.six: $(DOC_FILES)
 	($(GAPROOT)/bin/gap.sh -A makedoc.g)
