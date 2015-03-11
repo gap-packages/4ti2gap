@@ -47,6 +47,10 @@ In some systems 4ti2 does not find the Gnu Linear Programming Kit needed by the 
 
 Finally go to 4ti2gap folder and do
 
+	./autogen.sh
+
+and next
+
 	./configure --with-gaproot=whereyouinstalledgap --with-4ti2=whereyouinstalled4ti2 --with-gmp=whereyouinstalledgmp
 	make
 
