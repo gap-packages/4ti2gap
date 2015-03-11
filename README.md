@@ -8,7 +8,8 @@ So far it provides (limited) access to
 
 * grobner,
 * hilbert,
-* graver.
+* graver,
+* zsolve.
 
 
 2 Installation preparation
@@ -16,7 +17,7 @@ So far it provides (limited) access to
 
 To run this package you need 4ti2 installed with the components groebner and zsolve enabled, configured with the option --enable-shared.
 
-In order to use integer multiple precision arithmetic, the library GMP must be installed with the c++ option enabled. Also GAP needs this library. 
+In order to use integer multiple precision arithmetic, the library GMP must be installed with the c++ option enabled, and also 4ti2 and GAP should be installed with multiple precision arithmetic enabled. If not, the precission of 4ti2gap will be that of your system architecture.
 
 If you have GMP and 4ti2 installed in your system, you can try to build 4ti2gap in its folder. The following commands will try to find a GMP installed in /usr or /usr/local. (Note that the installation folders for GAP and 4ti2 should be specified with the appropiate options.)
 
@@ -80,7 +81,8 @@ gap> GroebnerBasis4ti2([[3,5,7]],"grlex");
 [ [ 0, 7, -5 ], [ 1, -2, 1 ], [ 1, 5, -4 ], [ 2, 3, -3 ], [ 3, 1, -2 ], 
   [ 4, -1, -1 ] ]
 ```
-If GMP is installed, `GroebnerBasis4ti2gmp( matrix , order )` uses integer multiple precision arithmetic.
+If GMP is installed, `GroebnerBasis4ti2( matrix , order )` uses integer multiple precision arithmetic.
+
 
 ### Hilbert bases
 
@@ -152,7 +154,7 @@ gap> ZSolve4ti2(["mat",[[0, 0]],"sign",[[0,0]]]);
 rec( zfree := [ [ 1, 0 ], [ 0, 1 ] ], zhom := [  ], zinhom := [ [ 0, 0 ] ] )
 ```
 
-If GMP is installed, `ZSolve4ti2gmp( problem )` 
+If GMP is installed, `ZSolve4ti2gmp( problem )` uses integer multiple precision arithmetic.
 
 4 Roadmap
 ---------
