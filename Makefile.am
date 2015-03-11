@@ -31,18 +31,23 @@ $(GAPINSTLIB): 4ti2gap.la
 	$(mkdir_p) $(BINARCHDIR)
 	cp .libs/4ti2gap.so $(GAPINSTLIB)
 
-clean-local: clean-doc
+clean-local: 
 	rm -rf $(BINARCHDIR)
 
-distclean-local: clean-doc
+distclean-local: 
 	rm -rf bin
+	rm -f src/.deps/*
+	rm -f *.la
+	rm -f Makefile.in
+	rm -rf autom4te.cache
+	rm -rf cnf
 
 doc:	doc/manual.six
 
-clean-doc:
-	rm -f doc/manual.*
-	rm -f doc/*.{idx,bbl,aux,blg,ilg,ind,log,out,pnr,tex,toc,bib,css,html,js,txt}
-	find doc/ -type f -name *.xml -and \( -not -name '4ti2gap.xml' \) -delete
+#clean-doc:
+#	rm -f doc/manual.*
+#	rm -f doc/*.{idx,bbl,aux,blg,ilg,ind,log,out,pnr,tex,toc,bib,css,html,js,txt}
+#	find doc/ -type f -name *.xml -and \( -not -name '4ti2gap.xml' \) -delete
 
 DOC_FILES = \
 	PackageInfo.g \
