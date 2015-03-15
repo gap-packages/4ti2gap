@@ -48,7 +48,10 @@
       <Heading>
 	Introduction
       </Heading>
-      How it was done, and why.
+      This package was produced mainly due to the fact that presentations for affine and numerical semigroups are in correspondence with binomial ideals, and <C>4ti2</C> makes fast computations with these. Also factorizations of elements in affine semigroups are solutions of systems of Diophantine linear equations, and <C>zsolve</C> can do this. Some factorization invariants depend on Graver basis computations, and this is also offered by <C>4ti2</C>. <P/>
+
+      We used as skeleton package <C>NormalizInterface</C> (https://github.com/fingolfin/NormalizInterface). We really appreciate the help received from their authors.<P/>
+
     </Chapter>
 
     <Chapter>
