@@ -48,9 +48,11 @@
       <Heading>
 	Introduction
       </Heading>
-      This package was produced mainly due to the fact that presentations for affine and numerical semigroups are in correspondence with binomial ideals, and <C>4ti2</C> makes fast computations with these. Also factorizations of elements in affine semigroups are solutions of systems of Diophantine linear equations, and <C>zsolve</C> can do this. Some factorization invariants depend on Graver basis computations, and this is also offered by <C>4ti2</C>. <P/>
+      This package was produced mainly due to the fact that presentations for affine and numerical semigroups are in correspondence with binomial ideals, and <C>4ti2</C> makes fast computations with these. Also factorizations of elements in affine semigroups are solutions of systems of Diophantine linear equations, and <C>zsolve</C> can do this. Some factorization invariants depend on Graver basis computations, and this is also offered by <C>4ti2</C>. Hilbert bases are needed for instance in testing if an affine semigroup is full. Again <C>4ti2</C> provides a function to compute Hilbert bases.   <P/>
 
       We used as skeleton package <C>NormalizInterface</C> (https://github.com/fingolfin/NormalizInterface). We really appreciate the help received from their authors.<P/>
+
+      Though there is a nice interface to <C>4ti2</C> in <C>gap</C> provided by S. Gustche, <C>4ti2Interface</C>, it calls externally with the <C>IO</C> package <C>4ti2</C>, and we wanted the functions to be loaded dynamically without the use of temporary input and output files.
 
     </Chapter>
 
@@ -58,8 +60,8 @@
       <Heading>
 	Functions
       </Heading>
-      Lala
 
+      
       <Section>
 	<Heading>
 	  Gröbner bases
@@ -164,9 +166,11 @@ gap> GraverBasis4ti2(["lat",[ [ 1, -2, 1 ], [ -3, -1, 2 ], [ -4, 1, 1 ] ]]);
         <C>problem</C> is a list to specify the input components of the "problem" (see the 4ti2 manual).
         
         <Example><![CDATA[
-gap> problem:=["mat",[[0, 0, 0, 0, 0, 3, -4, -1, 2], [0, 0, 0, 0, 1, -1, 1, 0, -1],
-[0, 0, 0, 1, 2, 0, 0, -1, -2], [0, 0, 1, 0, 1, 0, 0, -1, -1], [0, 1, 2, 0, 0, 0, 0, -1, -2],
-[1, 0, 2, 0, 0, 0, 0, -2, -1], [-2, 0, -2, 0, 0, 0, 0, 3, 0], [-2, 0, 0, 0, 0, 0, 0, 1, 0],
+gap> problem:=["mat",
+[[0, 0, 0, 0, 0, 3, -4, -1, 2], [0, 0, 0, 0, 1, -1, 1, 0, -1],
+[0, 0, 0, 1, 2, 0, 0, -1, -2], [0, 0, 1, 0, 1, 0, 0, -1, -1],
+[0, 1, 2, 0, 0, 0, 0, -1, -2], [1, 0, 2, 0, 0, 0, 0, -2, -1],
+[-2, 0, -2, 0, 0, 0, 0, 3, 0], [-2, 0, 0, 0, 0, 0, 0, 1, 0],
 [0, 0, -2, 0, 0, 0, 0, 1, 0], [0, 0, 0, 0, 0, 0, 0, -1, 0]],
 "rel", [[0, 0, 0, 0, 0, 0, -1, -1, -1, -1]], "sign",
 [[0, 0, 0, 0, 0, 0, 0, 0, 0]]];;
