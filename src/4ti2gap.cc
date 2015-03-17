@@ -2,12 +2,12 @@
 #include "4ti2groebner.h"
 #include "4ti2zsolve.h"
 
-typedef Obj (* GVarFunc)(/*arguments*/);
+typedef Obj (* GVarFunc_4ti2gap)(/*arguments*/);
 
 #define GVAR_FUNC_TABLE_ENTRY(srcfile, name, nparam, params) \
   {#name, nparam, \
    params, \
-   (GVarFunc)name, \
+   (GVarFunc_4ti2gap)name, \
    srcfile ":Func" #name }
 
 // Table of functions to export

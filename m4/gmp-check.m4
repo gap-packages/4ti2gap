@@ -28,7 +28,11 @@ AC_DEFUN([LB_CHECK_GMP],
     fi],
     [GMP_HOME_PATH="${DEFAULT_CHECKING_PATH}"]
     )
-
+if test "x$GMP_HOME_PATH" = "x"; then
+    gmp_found="no"
+    gmpxx_found="no"
+    AC_MSG_RESULT(No checking for GMP asked)
+else
 dnl Check for existence
 BACKUP_CPPFLAGS=${CPPFLAGS}
 BACKUP_LIBS=${LIBS}
@@ -88,4 +92,5 @@ fi
 
 CPPFLAGS=${BACKUP_CPPFLAGS}
 LIBS=${BACKUP_LIBS}
+fi
 ])

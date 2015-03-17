@@ -2,8 +2,7 @@
 #include "4ti2gap.h"
 
 #ifdef _4ti2_WITH_GMP_
-#include "gmpxx.h"
-#endif
+#include <gmpxx.h>
 
 // The next functions are taken from NormalizInterface GAP4 package
 // by Sebastian Gutsche, Max Horn, Christof Söger.
@@ -43,3 +42,4 @@ Obj MpzClassToGAP( const mpz_class& x )
     return MpzToGAP(x.get_mpz_t());
 }
 
+#endif

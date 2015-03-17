@@ -4,7 +4,7 @@
 #include "4ti2gap.h"
 
 #ifdef _4ti2_WITH_GMP_
-#include "gmpxx.h"
+#include <gmpxx.h>
 
 Obj MpzClassToGAP( const mpz_class& x );
 #endif

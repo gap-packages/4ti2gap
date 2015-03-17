@@ -6,14 +6,14 @@
 #include "4ti2gap.h"
 #include "basicxch.h"
 
+// If 4ti2 has gmp, disable int(64,32) in groebner
 #ifdef _4ti2_WITH_GMP_
-#include "gmp.h"
-#include "gmpxx.h"
+#include <gmpxx.h>
 #define _4ti2_GMP_
 #ifdef SYS_IS_64_BIT
 #undef _4ti2_INT64_
 #else
-#undef _4ti2_
+#undef _4ti2_INT32_
 #endif
 #endif
 
