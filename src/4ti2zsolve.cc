@@ -32,7 +32,7 @@ bool GAPIntTo4ti2(Obj x, _4ti2_int32_t &out)
 #endif
 {
     if (IS_INTOBJ(x)) {
-        out = INT_INTOBJ(x);
+        out = (int) INT_INTOBJ(x);
         return true;
     } else if (TNUM_OBJ(x) == T_INTPOS || TNUM_OBJ(x) == T_INTNEG) {
         UInt size = SIZE_INT(x);
@@ -54,7 +54,7 @@ template<>
 bool GAPIntTo4ti2(Obj x, mpz_class &out)
 {
     if (IS_INTOBJ(x)) {
-        out = INT_INTOBJ(x);
+        out = (int) INT_INTOBJ(x);
         return true;
     } else if (TNUM_OBJ(x) == T_INTPOS || TNUM_OBJ(x) == T_INTNEG) {
         mpz_ptr m = out.get_mpz_t();

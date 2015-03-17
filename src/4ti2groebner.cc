@@ -32,7 +32,7 @@
 bool _4ti2groebner_GAPInt2IntegerType( Obj x, mpz_class& oval )
 {
     if (IS_INTOBJ(x)) {
-        oval = INT_INTOBJ(x);
+        oval = (int) INT_INTOBJ(x);
         return true;
     } else if (TNUM_OBJ(x) == T_INTPOS || TNUM_OBJ(x) == T_INTNEG) {
         mpz_ptr m = oval.get_mpz_t();
@@ -49,7 +49,7 @@ bool _4ti2groebner_GAPInt2IntegerType( Obj x, mpz_class& oval )
 bool _4ti2groebner_GAPInt2IntegerType( Obj x, IntegerType &out )
 {
     if (IS_INTOBJ(x)) {
-        out = INT_INTOBJ(x);
+        out = (int) INT_INTOBJ(x);
         return true;
     } else if (TNUM_OBJ(x) == T_INTPOS || TNUM_OBJ(x) == T_INTNEG) {
         UInt size = SIZE_INT(x);
