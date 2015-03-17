@@ -6,7 +6,7 @@
 #include "basicxch.h"
 
 #ifdef _4ti2_WITH_GMP_
-#include "gmpxx.h"
+#include <gmpxx.h>
 #endif
 
 #include "zsolve/Exception.h"

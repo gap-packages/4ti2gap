@@ -66,7 +66,7 @@ AC_SUBST(FTIT_LDPATH)
 AC_SUBST(FTIT_CPPFLAGS)
 
 dnl ##
-dnl ## Locate GMP and check if 4ti2 is compiled with GMP
+dnl ## Locate GMP 
 dnl ##
 LB_CHECK_GMP(,[
 if test "${GAP_CPPFLAGS}/gmp" = "${GAP_CPPFLAGS}"; then
@@ -75,6 +75,10 @@ else
     AC_MSG_WARN([4ti2gap will be built without support for arbitrary-precision computations.])
 fi
 ])
+
+dnl ##
+dnl ## Check if 4ti2 is compiled with GMP
+dnl ##
 if test ! -z "${GMP_LIBS}"; then
     AC_MSG_CHECKING(for GMP support in 4ti2)
     BACKUP_CPPFLAGS=${CPPFLAGS}
@@ -92,6 +96,11 @@ if test ! -z "${GMP_LIBS}"; then
     ])
     CPPFLAGS=${BACKUP_CPPFLAGS}
     LIBS=${BACKUP_LIBS}
+fi
+
+if [test -f "${FTIT}"/bin/4ti2gmp -a "$gmpxx_found" = "no"]; then
+    echo "Mierda"
+    AC_MSG_ERROR([4ti2 is compiled with and GAP is not.])
 fi
 
 AM_CONDITIONAL([WITH_GMPXX],[test "$gmpxx_found" != "no" -a "$gmp4ti2_found" != "no"])
