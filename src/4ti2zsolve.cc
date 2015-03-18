@@ -536,7 +536,6 @@ Obj _4ti2zsolve_ZSolveGMP( Obj self, Obj list )
         std::cerr << e;
         return Fail;
     }
-
     return _4ti2_zsolve_ZSolveResult2GAP<mpz_class>( problem ); 
 }
 #endif

@@ -59,6 +59,7 @@ bool _4ti2groebner_GAPInt2IntegerType( Obj x, IntegerType &out )
                 return false;   // overflow
             if (TNUM_OBJ(x) == T_INTNEG)
                 out = -out;
+            return true;
         }
     }
     return false;
