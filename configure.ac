@@ -48,6 +48,31 @@ dnl ##
 dnl ## Locate the GAP root dir
 dnl ##
 AC_FIND_GAP
+
+AC_ARG_WITH([hpcgap],
+    [AC_HELP_STRING([--with-hpcgap], [to specify that this is hpc-gap version])],
+    [
+    for f in $GAPROOT/*hpc; do
+        if test -e "$f"; then
+            TOADDCFLAGS="../../build/cflags"
+            TOADDLDFLAGS="../../build/ldflags"
+        else
+            echo "I don't see anything that tells this is hpcgap..."
+        fi;
+        break
+    done
+    ],[])
+
+if test "x$TOADDCFLAGS" != "x"; then
+    if test -e "$TOADDCFLAGS" && test -e "$TOADDLDFLAGS"; then
+        CFLAGS="$CFLAGS `cat $TOADDCFLAGS`"
+        CXXFLAGS="$CXXFLAGS `cat $TOADDCFLAGS`"
+        LDFLAGS="$LDFLAGS `cat $TOADDLDFLAGS`"
+    else
+        AC_MSG_WARN(Could not find the some config files for compilation)
+    fi
+fi;
+
 dnl ##
 dnl ## Locate 4ti2
 dnl ##
