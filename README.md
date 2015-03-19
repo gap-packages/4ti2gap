@@ -11,6 +11,7 @@ So far it provides (limited) access to
 * graver,
 * zsolve.
 
+We took as initial template [NormalizInterface](https://github.com/fingolfin/NormalizInterface), and got plenty of help from Sebastian Gutshe.
 
 2 Installation preparation
 --------------------------
@@ -172,4 +173,3 @@ If GMP is installed, `ZSolve4ti2gmp( problem )` uses integer multiple precision 
 1.- See if we can get rid of --enable-shared
 
 2.- Produce a 32 bit version that uses gmp and can be compiled under cygwin.
-
