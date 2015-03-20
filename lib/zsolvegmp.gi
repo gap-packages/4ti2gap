@@ -24,11 +24,8 @@ InstallGlobalFunction(ZSolve4ti2gmp, function(arg)
             Error("The argument must be a list");
         fi;
         pos:=First([1..Length(a)], i->(a[i]="mat" or a[i]="lat"));
-        if pos = fail or pos = Length(a) then
+        if pos = fail or pos = Length(a) or not( IsValidZSolveInput( a ) ) then
             Error("Input data bad constructed");
-        fi;
-        if First(Flat(a[pos+1]),n->GMP_REDUCE(n)<>fail) <> fail then
-            Error("The size of the input suggest to use the GMP version of this function");
         fi;
         result:=_4ti2zsolve_ZSolveGMP(a);
         if Length(result)>2 then

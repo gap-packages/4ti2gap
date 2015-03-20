@@ -21,7 +21,7 @@ InstallGlobalFunction(GraverBasis4ti2, function(arg)
             Error("The argument must be a list");
         fi;
         pos:=First([1..Length(a)], i->(a[i]="mat" or a[i]="lat"));
-        if pos = fail or pos = Length(a) then
+        if pos = fail or pos = Length(a) or not( IsValidZSolveInput( a ) ) then
             Error("Input data bad constructed");
         fi;
         if First(Flat(a[pos+1]),n->GMP_REDUCE(n)<>fail) <> fail then

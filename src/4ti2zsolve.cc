@@ -308,6 +308,42 @@ bool buildZSolveProblem( Obj list, _4ti2_zsolve_::ZSolveAPI<mpz_class> &problem 
 }
 #endif
 
+template<typename Integer>
+Obj _4ti2_zsolve_HilbertResult2GAP( _4ti2_zsolve_::HilbertAPI<Integer>& problem )
+{
+    Obj zsolGAP;
+
+    _4ti2_zsolve_::VectorArrayAPI<Integer> *zhom =  (_4ti2_zsolve_::VectorArrayAPI<Integer> *) problem.get_matrix( "zhom" );
+    _4ti2_zsolve_::VectorArrayAPI<Integer> *zfree =  (_4ti2_zsolve_::VectorArrayAPI<Integer> *) problem.get_matrix( "zfree" );
+
+    _4ti2_zsolve_::VectorArrayAPI<Integer> empty( 0, 0 );
+    
+    if ( zfree && zfree->data.height() > 0 ) {
+        zsolGAP = NEW_PLIST( T_PLIST, 2 );
+        SET_LEN_PLIST( zsolGAP, 2 );
+    }
+    else {
+        zsolGAP = NEW_PLIST( T_PLIST, 1 );
+        SET_LEN_PLIST( zsolGAP, 1 );
+    }
+    
+    if ( zhom ) {
+        Obj elem =  _4ti2_zsolve_VectorArrayAPI2GAP<Integer>( *zhom );
+        SET_ELM_PLIST( zsolGAP, 1, elem );
+    }
+    else
+        SET_ELM_PLIST( zsolGAP, 1, _4ti2_zsolve_VectorArrayAPI2GAP<Integer>( empty ) );
+    CHANGED_BAG( zsolGAP );
+    
+    if ( zfree && zfree->data.height() > 0) {
+        Obj elem =  _4ti2_zsolve_VectorArrayAPI2GAP<Integer>( *zfree );
+        SET_ELM_PLIST( zsolGAP, 2, elem );
+        CHANGED_BAG( zsolGAP );
+    }
+
+    return zsolGAP;
+}
+
 Obj _4ti2zsolve_Hilbert( Obj self, Obj list )
 {
 #ifdef _4ti2_INT64_
@@ -335,11 +371,9 @@ Obj _4ti2zsolve_Hilbert( Obj self, Obj list )
     }
 
 #ifdef _4ti2_INT64_
-    _4ti2_zsolve_::VectorArrayAPI<_4ti2_int64_t> *hilbas =  (_4ti2_zsolve_::VectorArrayAPI<_4ti2_int64_t> *) problem.get_matrix( "hil" );
-    return _4ti2_zsolve_VectorArrayAPI2GAP<_4ti2_int64_t>( *hilbas ); 
+    return _4ti2_zsolve_HilbertResult2GAP<_4ti2_int64_t>( problem ); 
 #elif defined(_4ti2_INT32_)
-    _4ti2_zsolve_::VectorArrayAPI<_4ti2_int32_t> *hilbas =  (_4ti2_zsolve_::VectorArrayAPI<_4ti2_int32_t> *) problem.get_matrix( "hil" );
-    return _4ti2_zsolve_VectorArrayAPI2GAP<_4ti2_int32_t>( *hilbas ); 
+    return _4ti2_zsolve_HilbertResult2GAP<_4ti2_int32_t>( problem ); 
 #endif
 }
 
@@ -366,9 +400,8 @@ Obj _4ti2zsolve_HilbertGMP( Obj self, Obj list )
         return Fail;
     }
 
-    _4ti2_zsolve_::VectorArrayAPI<mpz_class> *hilbas =  (_4ti2_zsolve_::VectorArrayAPI<mpz_class> *) problem.get_matrix( "hil" );
-
-    return _4ti2_zsolve_VectorArrayAPI2GAP<mpz_class>( *hilbas ); 
+    return _4ti2_zsolve_HilbertResult2GAP<mpz_class>( problem ); 
+    
 }
 #endif
 

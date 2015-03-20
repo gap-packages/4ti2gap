@@ -13,7 +13,7 @@
 #! @Returns a list with elements of the basis
 #! @Arguments a
 InstallGlobalFunction(HilbertBasis4ti2, function(arg)
-    local a, narg, pos;
+    local a, narg, pos, result, recresult;
 
     narg:=Length(arg);
     if narg>0 then
@@ -22,13 +22,19 @@ InstallGlobalFunction(HilbertBasis4ti2, function(arg)
             Error("The argument must be a list");
         fi;
         pos:=First([1..Length(a)], i->(a[i]="mat" or a[i]="lat"));
-        if pos = fail or pos = Length(a) then
+        if pos = fail or pos = Length(a) or not( IsValidZSolveInput( a ) ) then
             Error("Input data bad constructed");
         fi;
         if First(Flat(a[pos+1]),n->GMP_REDUCE(n)<>fail) <> fail then
             Error("The size of the input suggest to use the GMP version of this function");
         fi;
-        return _4ti2zsolve_Hilbert(a);
+        result:=_4ti2zsolve_Hilbert(a);
+        if Length(result)>1 then
+            recresult:=rec(zhom:=result[1], zfree:=result[2]);
+        else
+            recresult:=rec(zhom:=result[1]);
+        fi;
+        return recresult;
     fi;
     Error("Wrong number of arguments");
 end);
