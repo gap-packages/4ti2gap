@@ -12,7 +12,7 @@ GAPINSTLIB = $(BINARCHDIR)/4ti2gap.so
 lib_LTLIBRARIES = 4ti2gap.la
 
 4ti2gap_la_SOURCES = src/4ti2gap.cc src/4ti2groebner.cc src/4ti2zsolve.cc src/basicxch.cc
-4ti2gap_la_CPPFLAGS = $(GAP_CPPFLAGS) -DCONFIG_H $(FTIT_CPPFLAGS) -D_GLIBCXX_USE_CXX11_ABI=0
+4ti2gap_la_CPPFLAGS = $(GAP_CPPFLAGS) -DCONFIG_H $(FTIT_CPPFLAGS) -std=c++11
 4ti2gap_la_LDFLAGS = -R$(GMP_HOME)/lib -R$(FTIT_LDPATH)
 4ti2gap_la_LDFLAGS += -module -avoid-version -z
 4ti2gap_la_LIBADD = $(FTIT_LDFLAGS) -lzsolve
