@@ -124,8 +124,7 @@ if test ! -z "${GMP_LIBS}"; then
 fi
 
 if [test -f "${FTIT}"/bin/4ti2gmp -a "$gmpxx_found" = "no"]; then
-    echo "Mierda"
-    AC_MSG_ERROR([4ti2 is compiled with and GAP is not.])
+    AC_MSG_ERROR([4ti2 is compiled with GMP, but GAP is not.])
 fi
 
 AM_CONDITIONAL([WITH_GMPXX],[test "$gmpxx_found" != "no" -a "$gmp4ti2_found" != "no"])
