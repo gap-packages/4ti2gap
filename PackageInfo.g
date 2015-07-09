@@ -83,6 +83,7 @@ Autoload := false,
 Keywords := [
   "4ti2",
   "groebner",
+  "minimize",
   "hilbert",
   "graver",
   "zsolve",

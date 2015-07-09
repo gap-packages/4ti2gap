@@ -14,16 +14,17 @@ AC_DEFUN([LB_CHECK_GMP],
     GMP_HOME_PATH="${DEFAULT_CHECKING_PATH}"
     AC_ARG_WITH(gmp,
     AS_HELP_STRING([--with-gmp={DIR|no}],
-    [Use the GMP library installed in DIR. 
-    If the argument is no, do not use the GMP library; 
-    some functionality will not be available then. 
-    Otherwise, the library is searched in the standard locations 
+    [Use the GMP library installed in DIR.
+    If the argument is no, do not use the GMP library;
+    some functionality will not be available then.
+    Otherwise, the library is searched in the standard locations
     (like "/usr" or "/usr/local").]),
     [if test "$withval" = yes ; then
         GMP_HOME_PATH="${DEFAULT_CHECKING_PATH}"
     elif test "$withval" != no ; then
         GMP_HOME_PATH="$withval ${DEFAULT_CHECKING_PATH}"
     else
+        AC_EGREP_HEADER(USE_GMP 1,${GAPROOT}/bin/${GAPARCH}/config.h, AC_MSG_ERROR([GAP uses GMP, this setting will not compile]), )
         GMP_HOME_PATH=""
     fi],
     [GMP_HOME_PATH="${DEFAULT_CHECKING_PATH}"]
@@ -38,7 +39,7 @@ BACKUP_CPPFLAGS=${CPPFLAGS}
 BACKUP_LIBS=${LIBS}
 
 AC_MSG_CHECKING(for GMP)
-for GMP_HOME in ${GMP_HOME_PATH} 
+for GMP_HOME in ${GMP_HOME_PATH}
     do
     if test -r "$GMP_HOME/include/gmp.h"; then
         gmp_found="yes"
@@ -66,14 +67,14 @@ for GMP_HOME in ${GMP_HOME_PATH}
                     AC_MSG_RESULT(gmpxx found)
                     ifelse([$1], , :, [$1])
                     break
-                ],[			
+                ],[
                     gmpxx_found="no"
                 ])
             fi
         ],[
             gmp_found="no"
             unset GMP_CPPFLAGS
-            unset GMP_LIBS	
+            unset GMP_LIBS
         ])
     else
         gmp_found="no"

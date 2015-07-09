@@ -1,5 +1,5 @@
 #
-# gap4ti2: 
+# gap4ti2:
 #
 # This file is part of the build system of a GAP kernel extension.
 # Requires automake.
@@ -11,7 +11,7 @@ GAPINSTLIB = $(BINARCHDIR)/4ti2gap.so
 
 lib_LTLIBRARIES = 4ti2gap.la
 
-4ti2gap_la_SOURCES = src/4ti2gap.cc src/4ti2groebner.cc src/4ti2zsolve.cc src/basicxch.cc
+4ti2gap_la_SOURCES = src/4ti2files.cc src/4ti2gap.cc src/4ti2groebner.cc src/4ti2minimize.cc src/4ti2normalform.cc src/4ti2zsolve.cc src/basicxch.cc src/4ti2daco.cc
 4ti2gap_la_CPPFLAGS = $(GAP_CPPFLAGS) -DCONFIG_H $(FTIT_CPPFLAGS) -std=c++11
 4ti2gap_la_LDFLAGS = -R$(GMP_HOME)/lib -R$(FTIT_LDPATH)
 4ti2gap_la_LDFLAGS += -module -avoid-version -z
@@ -19,7 +19,7 @@ lib_LTLIBRARIES = 4ti2gap.la
 if WITH_GMPXX
 4ti2gap_la_CPPFLAGS += $(GMP_FLAGS) -D_4ti2_WITH_GMP_ @INTBITS@
 4ti2gap_la_LIBADD += -l4ti2gmp
-else 
+else
 4ti2gap_la_CPPFLAGS += @INTBITS@
 4ti2gap_la_LIBADD += @FTITLIB@
 endif
@@ -31,10 +31,10 @@ $(GAPINSTLIB): 4ti2gap.la
 	$(mkdir_p) $(BINARCHDIR)
 	cp .libs/4ti2gap.so $(GAPINSTLIB)
 
-clean-local: 
+clean-local:
 	rm -rf $(BINARCHDIR)
 
-distclean-local: 
+distclean-local:
 	rm -rf bin
 	rm -f src/.deps/*
 	rm -f *.la
@@ -56,7 +56,7 @@ DOC_FILES = \
 	src/*.cc \
 	lib/*.gd \
 	makedoc.g
-#    examples/*.g 
+#    examples/*.g
 
 doc/manual.six: $(DOC_FILES)
 	($(GAPROOT)/bin/gap.sh -A makedoc.g)

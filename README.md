@@ -7,6 +7,8 @@ This package intends to use the tools included in 4ti2 from the gap shell.
 So far it provides (limited) access to
 
 * grobner,
+* minimize,
+* normalform,
 * hilbert,
 * graver,
 * zsolve.
@@ -90,6 +92,36 @@ gap> GroebnerBasis4ti2([[3,5,7]],"grlex");
 ```
 If GMP is installed, `GroebnerBasis4ti2( matrix , order )` uses integer multiple precision arithmetic.
 
+### Integer linear program minimal solution
+
+minimize is called in the following way:
+
+`Minimize4ti2( matrix, lattice, cost, sol, sign )`, where
+
+- matrix is optional as an empty list [], only if lattice basis is given,
+
+- lattice basis also optional as an empty list [], only if matrix is given, (both matrix and lattice can be given)
+
+- the cost vector should be a matrix with 1 row or a flat list,
+
+- sol is an integer solution to specify a fiber (same format as cost vector),
+
+- and the sign are the constraints of the variables (1 o 0 for non-negative and free variable, resp., optional as an empty list []).
+
+
+```gap
+gap> EXAMPLE
+```
+
+### Normal form
+
+normalform is called in the following way:
+
+`Normalform4ti2(matrix, lattice, groebner, cost, feas, sign)` where TO EXPLAIN
+
+```gap
+gap> EXAMPLE
+```
 
 ### Hilbert bases
 
