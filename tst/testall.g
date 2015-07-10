@@ -2,7 +2,7 @@ TEST_SETTING := rec(
     automake := false,
     verbose := true,
     rewriteToFile := false,
-    pkg := "NormalizInterface",
+    pkg := "4ti2gap",
 );
 
 if IsBound(GAPInfo.SystemEnvironment.AUTOMAKE_TESTS) then
@@ -28,22 +28,6 @@ if LoadPackage(TEST_SETTING.pkg) = fail then
     fi;
     Error("Could not load package '",TEST_SETTING.pkg,"'\n");
 fi;
-
-# Little helper for testing outputs
-NmzPropFingerprint := function(cone, prop)
-    local tmp;
-    if not NmzHasConeProperty(cone, prop) then
-        return fail;
-    fi;
-    tmp := NmzConeProperty(cone, prop);
-    if IsCyc(tmp) then
-        return tmp;
-    elif IsMatrix(tmp) then
-        return Length(tmp);
-    fi;
-    return tmp;
-end;
-
 
 CallFuncList(function()
     local d, HasSuffix, tests, success, i, test, opt;

@@ -6,6 +6,7 @@
 #include "4ti2gap.h"
 #include "4ti2daco.h"
 
+#include <glpk.h>
 // If 4ti2 has gmp, disable int(64,32) in groebner
 #ifdef _4ti2_WITH_GMP_
 #include <gmpxx.h>
@@ -122,7 +123,9 @@ Obj _4ti2groebner_Minimize( Obj self, Obj listA, Obj listL, Obj listC, Obj listZ
     _4ti2_::VectorArray sol( 1, rhs.get_size() );
     sol[0] = *(feasible.get_rhs());
     _4ti2_::Optimise opt;
+    glp_term_out( GLP_OFF );
     opt.compute( feasible, (*cost)[0], sol[0] );
+    glp_term_out( GLP_ON );
     std::cout.rdbuf( old );
 
     delete cost;

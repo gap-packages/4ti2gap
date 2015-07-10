@@ -57,8 +57,14 @@ Finally go to 4ti2gap folder and do
 and next
 
 	./configure --with-gaproot=whereyouinstalledgap --with-4ti2=whereyouinstalled4ti2 --with-gmp=whereyouinstalledgmp
+
 	make
 
+If the compilation process fails with the error `fatal error: 'glpk.h' file not found`, then it is necessary to specify the glpk path to include files before the configure command using CPPFLAGS:
+
+  CPPFLAGS="-I whereitisinstalledglpk/include" ./configure --with-gaproot=whereyouinstalledgap --with-4ti2=whereyouinstalled4ti2 --with-gmp=whereyouinstalledgmp
+
+	make
 
 3 Documentation and tests
 -------------------------
@@ -133,11 +139,10 @@ hilbert actually only returns the homogenous output. It is called in the followi
 gap> problem:=[ "mat", [ [ 1, -3, 9, -1, 81 ],
 [ -9, 27, 81, -9, 1 ], [ 1, -3, 9, 1, -81 ] ],
 "rel", [ "=", "<", ">"], "sign", [1, 0, 1, 0, -1] ];;
-HilbertBasis4ti2(problem);
-
-[ [ 3, 1, 0, 0, 0 ], [ 0, -364, 0, -1095, -27 ], [ 1, 0, 0, 1, 0 ],
-  [ 1, -121, 0, -365, -9 ], [ 0, -1, 0, 3, 0 ], [ 0, -27, 0, -81, -2 ],
-  [ 0, -14, 0, -39, -1 ], [ 2, -13, 0, -40, -1 ], [ 0, 0, 1, 9, 0 ] ]
+gap> HilbertBasis4ti2(problem);
+rec( zhom := [ [ 3, 1, 0, 0, 0 ], [ 0, -364, 0, -1095, -27 ], [ 1, 0, 0, 1, 0 ],
+	[ 1, -121, 0, -365, -9 ], [ 0, -1, 0, 3, 0 ], [ 0, -27, 0, -81, -2 ],
+  [ 0, -14, 0, -39, -1 ], [ 2, -13, 0, -40, -1 ], [ 0, 0, 1, 9, 0 ] ] )
 
 gap> problem:=["mat", [[1, 1, 1, -1, -1, -1, 0, 0, 0 ],
 [1, 1, 1, 0, 0, 0, -1, -1, -1], [0, 1, 1, -1, 0, 0, -1, 0, 0],
@@ -145,15 +150,15 @@ gap> problem:=["mat", [[1, 1, 1, -1, -1, -1, 0, 0, 0 ],
 [ 0, 1, 1, 0, -1, 0, 0, 0, -1], [ 1, 1, 0, 0, -1, 0, -1, 0, 0]],
 "rel", [[0, 0 ,0 ,0, 0, 0, 0]],
 "sign", [[0, 0, 0, 0, 0, 0, 0, 0, 0]]];;
-HilbertBasis4ti2(problem);
-
-[ ]
+gap> HilbertBasis4ti2(problem);
+rec( zfree := [ [ 2, 2, -1, -2, 1, 4, 3, 0, 0 ],
+	[ 0, -1, 1, 1, 0, -1, -1, 1, 0 ], [ -1, 0, 1, 2, 0, -2, -1, 0, 1 ] ],
+	zhom := [  ] )
 
 gap> problem:=["mat", [[1, -31, -1, 1], [-111, 5, 10, 25]]];;
-HilbertBasis4ti2(problem);
-
-[ [ 35, 0, 136, 101 ], [ 15, 1, 36, 52 ], [ 195, 34, 0, 859 ],
-  [ 110, 19, 4, 483 ], [ 25, 4, 8, 107 ] ]
+gap> HilbertBasis4ti2(problem);
+rec( zhom := [ [ 35, 0, 136, 101 ], [ 15, 1, 36, 52 ], [ 195, 34, 0, 859 ],
+	[ 110, 19, 4, 483 ], [ 25, 4, 8, 107 ] ] )
 ```
 
 If GMP is installed, `HilbertBasis4ti2gmp( problem )` uses integer multiple precision arithmetic.
@@ -181,7 +186,7 @@ If GMP is installed, `GraverBasis4ti2gmp( problem )` uses integer multiple preci
 zsolve performs the same computations as 4ti2 the command line version. Its input is expressed the same way as GraverBasis4ti2 and HilbertBasis4ti2. The output is a record with the components that gives the explicit description of all solutions (see the 4ti2 manual):
 
 ```gap
-gap> problem:=["mat",[[0, 0, 0, 0, 0, 3, -4, -1, 2], [0, 0, 0, 0, 1, -1, 1, 0, -1], [0, 0, 0, 1, 2, 0, 0, -1, -2], [0, 0, 1, 0, 1, 0, 0, -1, -1], [0, 1, 2, 0, 0, 0, 0, -1, -2], [1, 0, 2, 0, 0, 0, 0, -2, -1], [-2, 0, -2, 0, 0, 0, 0, 3, 0], [-2, 0, 0, 0, 0, 0, 0, 1, 0], [0, 0, -2, 0, 0, 0, 0, 1, 0], [0, 0, 0, 0, 0, 0, 0, -1, 0]], "rel", [[0, 0, 0, 0, 0, 0, -1, -1, -1, -1]], "sign", [[0, 0, 0, 0, 0, 0, 0, 0, 0]]];; ZSolve4ti2(problemzso);
+gap> problem:=["mat",[[0, 0, 0, 0, 0, 3, -4, -1, 2], [0, 0, 0, 0, 1, -1, 1, 0, -1], [0, 0, 0, 1, 2, 0, 0, -1, -2], [0, 0, 1, 0, 1, 0, 0, -1, -1], [0, 1, 2, 0, 0, 0, 0, -1, -2], [1, 0, 2, 0, 0, 0, 0, -2, -1], [-2, 0, -2, 0, 0, 0, 0, 3, 0], [-2, 0, 0, 0, 0, 0, 0, 1, 0], [0, 0, -2, 0, 0, 0, 0, 1, 0], [0, 0, 0, 0, 0, 0, 0, -1, 0]], "rel", [[0, 0, 0, 0, 0, 0, -1, -1, -1, -1]], "sign", [[0, 0, 0, 0, 0, 0, 0, 0, 0]]];; ZSolve4ti2(problem);
 
 rec( zhom := [ [ 1, 0, 2, 2, 1, 0, 0, 2, 1 ], [ 2, 0, 1, 0, 1, 2, 1, 2, 0 ],
       [ 1, 2, 0, 0, 1, 2, 2, 0, 1 ], [ 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
