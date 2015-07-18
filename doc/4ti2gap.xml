@@ -96,6 +96,28 @@ gap> GroebnerBasis4ti2([[3,5,7]],"grlex");
 
       <Section>
 	<Heading>
+	  Integer linear program minimal solution
+	</Heading>
+
+	<ManSection>
+	  <Func Name="Minimize4ti2" Arg="matrix, lattice, cost, sol, sign"/>
+	  <Description>
+	    Computes the minimal solution of <M>Ax=A s</M> with respect to the cost <A>cost</A>; where <M>A</M> is either the matrix <A>matrix</A> or the matrix whose columns have associated lattice idea represented by <A>lattice</A> (<M>s</M> is <A>sol</A>, a particular solution to the problem; this has changed in 4ti2 since version 1.6.6).
+
+	    The arguments are <A> matrix</A> which  is optional as an empty list [], only if lattice basis is given; <A>lattice</A> basis also optional as an empty list [], only if matrix is given, (both matrix and lattice can be given); <A>cost</A> the cost vector should be a matrix with 1 row or a flat list; <A>sol</A> is an integer solution to specify a fiber (same format as cost vector);  and <A>sign</A> are the constraints of the variables (1 o 0 for non-negative and free variable, resp., optional as an empty list []).
+	  <Example><![CDATA[
+gap> Minimize4ti2([[3,5,7]],[],[[1,1,1]],[3,6,9],[1,1,1]);
+[ [ 2, 1, 13 ] ]
+gap> GroebnerBasis4ti2([[3,5,7]]);
+[ [ -4, 1, 1 ], [ -3, -1, 2 ], [ -1, 2, -1 ] ]
+gap> Minimize4ti2([],last,[[1,1,1]],[3,6,9],[1,1,1]);
+[ [ 2, 1, 13 ] ]
+	  ]]></Example>
+	  </Description>
+	</ManSection>
+      </Section>
+      <Section>
+	<Heading>
 	  Hilbert bases
 	</Heading>
 

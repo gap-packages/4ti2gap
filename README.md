@@ -116,7 +116,12 @@ minimize is called in the following way:
 
 
 ```gap
-gap> EXAMPLE
+gap> Minimize4ti2([[3,5,7]],[],[[1,1,1]],[3,6,9],[1,1,1]);
+[ [ 2, 1, 13 ] ]
+gap> GroebnerBasis4ti2([[3,5,7]]);
+[ [ -4, 1, 1 ], [ -3, -1, 2 ], [ -1, 2, -1 ] ]
+gap> Minimize4ti2([],last,[[1,1,1]],[3,6,9],[1,1,1]);
+[ [ 2, 1, 13 ] ]
 ```
 
 ### Normal form
@@ -206,6 +211,7 @@ rec( zhom := [  ], zinhom := [ [ 0, 3, 1, 7 ], [ 2, 4, 1, 5 ], [ 4, 5, 1, 3 ],
 ```
 
 If GMP is installed, `ZSolve4ti2gmp( problem )` uses integer multiple precision arithmetic.
+
 
 4 Roadmap
 ---------
