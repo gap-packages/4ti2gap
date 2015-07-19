@@ -128,10 +128,26 @@ gap> Minimize4ti2([],last,[[1,1,1]],[3,6,9],[1,1,1]);
 
 normalform is called in the following way:
 
-`Normalform4ti2(matrix, lattice, groebner, cost, feas, sign)` where TO EXPLAIN
+`Normalform4ti2(matrix, lattice, groebner, cost, feas, sign)` where
+
+- matrix is optional as an empty list [], only if lattice basis is given,
+
+- lattice basis also optional as an empty list [], only if matrix is given, (both matrix and lattice can be given)
+
+- a Gröbner basis (the differences of the exponents) of the lattice ideal
+
+- the cost vector should be a matrix with 1 row or a flat list,
+
+- feas is a list of solutions of the problem (the ones we want to compute their normal form),
+
+- and the sign are the constraints of the variables (1 o 0 for non-negative and free variable, resp., optional as an empty list []).
+
+It computes the normal form of a list of feasible points.
 
 ```gap
-gap> EXAMPLE
+gap> g:=GroebnerBasis4ti2([[3,5,7]]);;
+gap> Normalform4ti2([[3,5,7]],[],g,[[1,1,1]],[[10,11,23],[7,0,0]],[[1,1,1]]);
+[ [ 1, 1, 34 ], [ 0, 0, 3 ] ]
 ```
 
 ### Hilbert bases
