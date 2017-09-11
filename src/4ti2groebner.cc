@@ -44,9 +44,11 @@ Obj _4ti2groebner_GroebnerBasisOrder( Obj self, Obj listA, Obj listO )
     _4ti2_::BasicOptions::instance()->output = _4ti2_::BasicOptions::SILENT;
     _4ti2_::Feasible feasible( 0, A );
     _4ti2_::VectorArray fbas = feasible.get_basis();
-    if ( fbas.get_number() == 0 )
-        ErrorQuit( "Could not compute the Groebner basis", 0, 0);
-
+    if ( fbas.get_number() == 0 ) {
+        _4ti2_::VectorArray empty(0, 0);
+        return _4ti2gap_VectorArray2GAP( empty );
+//        ErrorQuit( "Could not compute the Groebner basis", 0, 0);
+    }
     _4ti2_::Globals::minimal = false;
     _4ti2_::GeneratingSet gs( feasible, 0 );
 
