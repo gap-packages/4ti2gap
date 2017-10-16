@@ -38,7 +38,7 @@ Status         := "dev",
 #CommunicatedBy := "name (place)",
 #AcceptDate     := "mm/yyyy",
 
-PackageWWWHome := "https://bitbucket.org/gap-system/4ti2gap",
+PackageWWWHome := "https://github.com/gap-packages/4ti2gap",
 
 #ArchiveFormats := ".tar.gz tar.bz2",
 #ArchiveURL     := Concatenation("",
