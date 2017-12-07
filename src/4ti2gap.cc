@@ -66,21 +66,13 @@ static Int InitLibrary( StructInitInfo *module )
 */
 static StructInitInfo module = {
 #ifdef FTITSTATIC
- /* type        = */ MODULE_STATIC,
+    .type = MODULE_STATIC,
 #else
- /* type        = */ MODULE_DYNAMIC,
+    .type = MODULE_DYNAMIC,
 #endif
- /* name        = */ "4ti2gap",
- /* revision_c  = */ 0,
- /* revision_h  = */ 0,
- /* version     = */ 0,
- /* crc         = */ 0,
- /* initKernel  = */ InitKernel,
- /* initLibrary = */ InitLibrary,
- /* checkInit   = */ 0,
- /* preSave     = */ 0,
- /* postSave    = */ 0,
- /* postRestore = */ 0
+    .name = "4ti2gap",
+    .initKernel = InitKernel,
+    .initLibrary = InitLibrary,
 };
 
 #ifndef FTITSTATIC
