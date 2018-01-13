@@ -1,5 +1,5 @@
 InstallGlobalFunction(Normalform4ti2, function(arg)
-    local matrix, basis, cost, gro, _feas, feas, sign, narg;
+    local matrix, basis, gro, _cost, cost, feas, sign, narg;
 
     narg:=Length(arg);
     if narg < 6 then
@@ -16,20 +16,20 @@ InstallGlobalFunction(Normalform4ti2, function(arg)
         Error("The third argument must be a list of vectors (the Groebner basis)");
     fi;
 
-    cost := arg[4];
-    if not(IsRectangularTable(cost)) then
-        Error("The fourth argument should be a matrix");
+    _cost := arg[4];
+    if IsRectangularTable(_cost) then
+        cost := _cost;
+    else
+        if not(IsList(_cost)) then
+            Error("The fourth argument should be a list or a matrix with one row");
+        else
+            cost := [_cost];
+        fi;
     fi;
 
-    _feas := arg[5];
-    if IsRectangularTable(_feas) then
-        feas := _feas;
-    else
-        if not(IsList(_feas)) then
-            Error("The fifth argument should be a list or a matrix with one row");
-        else
-            feas := [_feas];
-        fi;
+    feas := arg[5];
+    if not(IsRectangularTable(feas)) then
+        Error("The fifth argument must be a list of vectors");
     fi;
 
     sign := arg[6];
