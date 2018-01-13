@@ -12,7 +12,7 @@ InstallGlobalFunction(Normalform4ti2, function(arg)
     fi;
 
     gro := arg[3];
-    if not(IsRectangularTable(matrix)) then
+    if not(IsRectangularTable(gro)) then
         Error("The third argument must be a list of vectors (the Groebner basis)");
     fi;
 
