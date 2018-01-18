@@ -65,6 +65,24 @@ static Int InitLibrary( StructInitInfo *module )
 *F  InitInfopl()  . . . . . . . . . . . . . . . . . table of init functions
 */
 static StructInitInfo module = {
+#if defined(__GNUC__) || defined(__GNUG__)
+#ifdef FTITSTATIC
+/* type        = */ MODULE_STATIC,
+#else
+/* type        = */ MODULE_DYNAMIC,
+#endif
+/* name        = */ "4ti2gap",
+/* revision_c  = */ 0,
+/* revision_h  = */ 0,
+/* version     = */ 0,
+/* crc         = */ 0,
+/* initKernel  = */ InitKernel,
+/* initLibrary = */ InitLibrary,
+/* checkInit   = */ 0,
+/* preSave     = */ 0,
+/* postSave    = */ 0,
+/* postRestore = */ 0
+#else 
 #ifdef FTITSTATIC
     .type = MODULE_STATIC,
 #else
@@ -73,6 +91,7 @@ static StructInitInfo module = {
     .name = "4ti2gap",
     .initKernel = InitKernel,
     .initLibrary = InitLibrary,
+#endif
 };
 
 #ifndef FTITSTATIC
