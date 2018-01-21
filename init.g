@@ -5,6 +5,7 @@ if _4ti2_lib <> fail then
     ReadPackage("4ti2gap", "lib/groebner.gd");
     ReadPackage("4ti2gap", "lib/minimize.gd");
     ReadPackage("4ti2gap", "lib/normalform.gd");
+    ReadPackage("4ti2gap", "lib/markov.gd");
     ReadPackage("4ti2gap", "lib/hilbert.gd");
     ReadPackage("4ti2gap", "lib/graver.gd");
     ReadPackage("4ti2gap", "lib/zsolve.gd");

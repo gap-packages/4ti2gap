@@ -3,6 +3,7 @@
 #include "4ti2minimize.h"
 #include "4ti2files.h"
 #include "4ti2normalform.h"
+#include "4ti2markov.h"
 #include "4ti2zsolve.h"
 
 typedef Obj (* GVarFunc_4ti2gap)(/*arguments*/);
@@ -19,6 +20,7 @@ static StructGVarFunc GVarFuncs[] = {
     GVAR_FUNC_TABLE_ENTRY("4ti2gap.cc", _4ti2groebner_GroebnerBasis, 1, "list"),
     GVAR_FUNC_TABLE_ENTRY("4ti2gap.cc", _4ti2groebner_Minimize, 5, "list"),
     GVAR_FUNC_TABLE_ENTRY("4ti2gap.cc", _4ti2groebner_Normalform, 6, "list"),
+    GVAR_FUNC_TABLE_ENTRY("4ti2gap.cc", _4ti2groebner_MarkovBasis, 6, "list"),
     GVAR_FUNC_TABLE_ENTRY("4ti2gap.cc", _4ti2gap_MatFile2GAP, 1, "list"),
     GVAR_FUNC_TABLE_ENTRY("4ti2gap.cc", _4ti2zsolve_Hilbert, 1, "list"),
 #ifdef _4ti2_WITH_GMP_

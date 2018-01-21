@@ -9,6 +9,7 @@ So far it provides (limited) access to
 * grobner,
 * minimize,
 * normalform,
+* markov, 
 * hilbert,
 * graver,
 * zsolve.
@@ -140,7 +141,7 @@ normalform is called in the following way:
 
 - feas is a list of solutions of the problem (the ones we want to compute their normal form),
 
-- and the sign are the constraints of the variables (1 o 0 for non-negative and free variable, resp., optional as an empty list []).
+- and the sign are the constraints of the variables (1 or 0 for non-negative and free variable, resp., optional as an empty list []).
 
 It computes the normal form of a list of feasible points.
 
@@ -148,6 +149,32 @@ It computes the normal form of a list of feasible points.
 gap> g:=GroebnerBasis4ti2([[3,5,7]]);;
 gap> Normalform4ti2([[3,5,7]],[],g,[[1,1,1]],[[10,11,23],[7,0,0]],[[1,1,1]]);
 [ [ 1, 1, 34 ], [ 0, 0, 3 ] ]
+```
+
+### Markov bases
+
+markov is called in the following way:
+
+`MarkovBasis4ti2(matrix, lattice, sign, weights, weights_max, zsol)` where
+
+- matrix is optional as an empty list [], only if lattice basis is given,
+
+- lattice basis also optional as an empty list [], only if matrix is given, (both matrix and lattice can be given)
+
+- sign constraints of the variables (1 or 0 for non-negative and free variable, resp., optional as an empty list []).
+
+- weights vector used for truncation (optional as an empty list []).
+
+- weights_max are the maximum weights used for truncation (optional as an empty list [], needed if weights is given).
+
+- zsol is an integer solution to specify a fiber (optional as an empty list, the integer solution is used for truncation).
+
+```gap
+gap> lat:=[[-3, 2, -2, 0, 0, 0, -1, 1, 0, 1, 1, 3, 0], [1, 1, 2, 0, 1, -1, -1, 1, -2, 0, -2, -3, 1], [-3, 1, -4, 1, 0, -1, 2, 2, 2, 0, 2, 1, -1], [21, -21, 8, -2, -4, 5, 14, -15, 9, -8, -1, -10, -3], [42, -43, 15, -2, -7, 10, 25, -25, 17, -18, 1, -24, -6], [-1, 0, 4, -1, 3, -2, 1, -1, 0, -1, 0, -2, 1], [-83, 63, -41, 6, 9, -8, -44, 45, -17, 28, 17, 59, 5], [1, -1, -1, 2, 3, -1, -1, -2, 3, -2, 1, -1, 0], [-5, 3, -1, 1, -4, 3, 1, 1, 2, 0, 1, 2, -1]];
+gap> zsol:=[1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0];
+gap> MarkovBasis4ti2([], lat, [], [], [], zsol);
+[ [ 0, 4, 3, 0, 0, -3, 0, -1, -1, 0, 2, -1, -1 ], [ 1, 1, 2, 0, 1, -1, -1, 1, -2, 0, -2, -3, 1 ], 
+  [ 3, -2, 2, 0, 0, 0, 1, -1, 0, -1, -1, -3, 0 ], [ 3, 4, 1, -1, -2, -1, 0, -2, -2, 1, -1, 0, 0 ] ]
 ```
 
 ### Hilbert bases
