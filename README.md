@@ -6,10 +6,12 @@ The GAP 4 package `4ti2gap`
 This package intends to use the tools included in 4ti2 from the gap shell.
 So far it provides (limited) access to
 
-* grobner,
+* groebner,
 * minimize,
 * normalform,
 * markov, 
+* walk, 
+* zbasis, 
 * hilbert,
 * graver,
 * zsolve.
@@ -70,8 +72,6 @@ If the compilation process fails with the error `fatal error: 'glpk.h' file not 
 3 Documentation and tests
 -------------------------
 
-So far a limited groebner and hilbert are included.
-
 ### Gröbner bases
 
 groebner is called in the following way:
@@ -85,8 +85,7 @@ gap> GroebnerBasis4ti2([[3,5,7]],[[3,5,7]]);
 
 gap> GroebnerBasis4ti2([[3,5,7]],"lex");
 
-[ [ 0, 7, -5 ], [ 1, -2, 1 ], [ 1, 5, -4 ], [ 2, 3, -3 ], [ 3, 1, -2 ],
-  [ 4, -1, -1 ] ]
+[ [ 0, 7, -5 ], [ 1, -2, 1 ], [ 1, 5, -4 ], [ 2, 3, -3 ], [ 3, 1, -2 ], [ 4, -1, -1 ] ]
 
 gap> GroebnerBasis4ti2([[3,5,7]],"grevlex");
 
@@ -94,10 +93,10 @@ gap> GroebnerBasis4ti2([[3,5,7]],"grevlex");
 
 gap> GroebnerBasis4ti2([[3,5,7]],"grlex");  
 
-[ [ 0, 7, -5 ], [ 1, -2, 1 ], [ 1, 5, -4 ], [ 2, 3, -3 ], [ 3, 1, -2 ],
-  [ 4, -1, -1 ] ]
+[ [ 0, 7, -5 ], [ 1, -2, 1 ], [ 1, 5, -4 ], [ 2, 3, -3 ], [ 3, 1, -2 ], [ 4, -1, -1 ] ]
 ```
 If GMP is installed, `GroebnerBasis4ti2( matrix , order )` uses integer multiple precision arithmetic.
+
 
 ### Integer linear program minimal solution
 
@@ -105,15 +104,15 @@ minimize is called in the following way:
 
 `Minimize4ti2( matrix, lattice, cost, sol, sign )`, where
 
-- matrix is optional as an empty list [], only if lattice basis is given,
+- matrix is optional as an empty list [] only if lattice basis is given,
 
-- lattice basis also optional as an empty list [], only if matrix is given, (both matrix and lattice can be given)
+- lattice basis also optional as an empty list [] only if matrix is given,
 
 - the cost vector should be a matrix with 1 row or a flat list,
 
 - sol is an integer solution to specify a fiber (same format as cost vector),
 
-- and the sign are the constraints of the variables (1 o 0 for non-negative and free variable, resp., optional as an empty list []).
+- the sign are the constraints of the variables (1 o 0 for non-negative and free variable, resp., optional as an empty list [], and the default is all non-negative).
 
 
 ```gap
@@ -133,17 +132,15 @@ normalform is called in the following way:
 
 - matrix is optional as an empty list [], only if lattice basis is given,
 
-- lattice basis also optional as an empty list [], only if matrix is given, (both matrix and lattice can be given)
+- lattice basis also optional as an empty list [], only if matrix is given, 
 
 - a Gröbner basis (the differences of the exponents) of the lattice ideal
 
-- the cost vector should be a matrix with 1 row or a flat list,
+- the cost vector should be a matrix with 1 row or a flat list, also optional as an empty list [] (default is degrevlex),
 
 - feas is a list of solutions of the problem (the ones we want to compute their normal form),
 
-- and the sign are the constraints of the variables (1 or 0 for non-negative and free variable, resp., optional as an empty list []).
-
-It computes the normal form of a list of feasible points.
+- sign are the constraints of the variables (1 or 0 for non-negative and free variable, resp., optional as an empty list [], and the default is all non-negative).
 
 ```gap
 gap> g:=GroebnerBasis4ti2([[3,5,7]]);;
@@ -159,9 +156,9 @@ markov is called in the following way:
 
 - matrix is optional as an empty list [], only if lattice basis is given,
 
-- lattice basis also optional as an empty list [], only if matrix is given, (both matrix and lattice can be given)
+- lattice basis also optional as an empty list [] only if matrix is given,
 
-- sign constraints of the variables (1 or 0 for non-negative and free variable, resp., optional as an empty list []).
+- sign constraints of the variables (1 or 0 for non-negative and free variable, resp., optional as an empty list [], and the default is all non-negative).
 
 - weights vector used for truncation (optional as an empty list []).
 
@@ -173,8 +170,48 @@ markov is called in the following way:
 gap> lat:=[[-3, 2, -2, 0, 0, 0, -1, 1, 0, 1, 1, 3, 0], [1, 1, 2, 0, 1, -1, -1, 1, -2, 0, -2, -3, 1], [-3, 1, -4, 1, 0, -1, 2, 2, 2, 0, 2, 1, -1], [21, -21, 8, -2, -4, 5, 14, -15, 9, -8, -1, -10, -3], [42, -43, 15, -2, -7, 10, 25, -25, 17, -18, 1, -24, -6], [-1, 0, 4, -1, 3, -2, 1, -1, 0, -1, 0, -2, 1], [-83, 63, -41, 6, 9, -8, -44, 45, -17, 28, 17, 59, 5], [1, -1, -1, 2, 3, -1, -1, -2, 3, -2, 1, -1, 0], [-5, 3, -1, 1, -4, 3, 1, 1, 2, 0, 1, 2, -1]];
 gap> zsol:=[1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0];
 gap> MarkovBasis4ti2([], lat, [], [], [], zsol);
-[ [ 0, 4, 3, 0, 0, -3, 0, -1, -1, 0, 2, -1, -1 ], [ 1, 1, 2, 0, 1, -1, -1, 1, -2, 0, -2, -3, 1 ], 
-  [ 3, -2, 2, 0, 0, 0, 1, -1, 0, -1, -1, -3, 0 ], [ 3, 4, 1, -1, -2, -1, 0, -2, -2, 1, -1, 0, 0 ] ]
+[ [ 0, 4, 3, 0, 0, -3, 0, -1, -1, 0, 2, -1, -1 ], [ 1, 1, 2, 0, 1, -1, -1, 1, -2, 0, -2, -3, 1 ], [ 3, -2, 2, 0, 0, 0, 1, -1, 0, -1, -1, -3, 0 ], [ 3, 4, 1, -1, -2, -1, 0, -2, -2, 1, -1, 0, 0 ] ]
+```
+
+### Integer linear program minimal solution
+
+walk is called in the following way:
+
+`Walk4ti2(matrix, lattice, gro_start, cost_start, cost, zsol, sign)`
+
+- matrix is optional as an empty list [], only if lattice basis is given,
+
+- lattice basis also optional as an empty list [], only if matrix is given, 
+
+- gro_start is the starting Groebner basis (needed), 
+
+- cost_start is the starting cost vector (optional as an empty list [], default is degrevlex),
+
+- cost is the target cost vector (needed according to 4ti2 source code),
+
+- zsol is an integer solution to specify a fiber (according to 4ti2 source code, optional as an empty list []), 
+
+- sign constraints of the variables (1 or 0 for non-negative and free variable, resp., optional as an empty list [], and the default is all non-negative).
+
+```gap
+gap> mat:=[[12223, 12224, 36674, 61119, 85569]];;
+gap> gro_start := [[-7336, 3, 2444, 0, 0], [-7334, -2, 2445, 0, 0], [-2, 5, -1, 0, 0], [-1, -4, 0, 1, 0], [-1, -3, -1, 0, 1]];;
+gap> cost_start := [[-1, 0, 0, 0, 0]];;
+gap> cost := [[1, 1, 0, 0, 0]];;
+gap> Walk4ti2(mat, [], gro_start, cost_start, cost, [], []);
+[ [-2, 2, 2, 3, -3 ], [ -2, 3, 1, 2, -2 ], [ -2, 4, 0, 1, -1 ], ....  [ 7317, -1, -2450, 7, 0 ], [ 7318, 3, -2450, 6, 0 ], [ 7320, -2, -2449, 6, 0 ], [ 7321, 2, -2449, 5, 0 ], [ 7323, -3, -2448, 5, 0 ], [ 7324, 1, -2448, 4, 0 ], [ 7326, -4, -2447, 4, 0 ], [ 7327, 0, -2447, 3, 0 ], [ 7330, -1, -2446, 2, 0 ], [ 7331, 3, -2446, 1, 0 ], [ 7333, -2, -2445, 1, 0 ], [ 7334, 2, -2445, 0, 0 ], [ 7336, -3, -2444, 0, 0 ] ]
+```
+
+
+### Lattice bases
+
+zbasis is called in the following way:
+
+`ZBasis4ti2(matrix)` 
+
+```gap
+gap> ZBasis4ti2([[15, 4, 14, 19, 2, 1, 10, 17], [18, 11, 13, 5, 16, 16, 8, 19], [11, 7, 8, 19, 15, 18, 14, 6], [17, 10, 13, 17, 16, 14, 15, 18]]);
+[ [ -13, 1, 64, 0, 48, -36, -17, -35 ], [ -154, 0, 551, -4, 380, -273, -131, -265 ], [ -44, 0, 168, -3, 115, -84, -37, -83 ], [ 121, 0, -452, 0, -321, 231, 115, 222 ] ]
 ```
 
 ### Hilbert bases

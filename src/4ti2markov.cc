@@ -35,8 +35,6 @@
 Obj _4ti2groebner_MarkovBasis( Obj self, Obj listM, Obj listL, Obj listSG, Obj listW,
                               Obj listWM, Obj listZS)
 {
-//    _4ti2_::Globals::generation = _4ti2_::Globals::PROJECT_AND_LIFT;
-
     // matrix argument
     _4ti2_::VectorArray *matrix = 0;
     if ( IS_LIST( listM ) && LEN_LIST( listM ) > 0 ) {
@@ -128,6 +126,7 @@ Obj _4ti2groebner_MarkovBasis( Obj self, Obj listM, Obj listL, Obj listSG, Obj l
         ErrorQuit( "weights_max and weights are both required or none should be given.", 0, 0);
     }
 
+    // zsol argument
     _4ti2_::Vector *zsol = 0;
     _4ti2_::VectorArray* tmp_zsol;
     if ( IS_LIST( listZS ) && LEN_LIST( listZS ) > 0 ) {
@@ -163,7 +162,7 @@ Obj _4ti2groebner_MarkovBasis( Obj self, Obj listM, Obj listL, Obj listSG, Obj l
  
     std::cout.rdbuf( old );
 
-    glp_term_out( GLP_OFF );
+    glp_term_out( GLP_ON );
 
     if ( zsol ) delete zsol;
     if ( weights ) delete weights; if ( weights_max ) delete weights_max;

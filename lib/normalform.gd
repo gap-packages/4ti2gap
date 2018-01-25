@@ -1,11 +1,11 @@
 #! @Chapter Functions
 #! @Section Normalform4ti2
-#! In this section we show how to interact with <C>normalform</C> in <C>4ti2<C>
+#! In this section we show how to interact with <C>4ti2<C>'s <C>normalform</C>
 
 
 #! @Description
 #! Computes the normal form of a list of feasible points.
-#! Input arguments (using 4ti2 specification for minimize):
+#! Input arguments (using 4ti2 specification for normalform):
 #! A matrix (optional as an empty list [], only if lattice basis is given),
 #! a lattice basis (optional as an empty list [], only if matrix is given),
 #! the Groebner basis of the lattice,

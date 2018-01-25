@@ -127,6 +127,7 @@ bool _4ti2gap_GAPMatrix2StdString( Obj listA, std::string& thst )
     if ( IS_PLIST( rowlist ) ) {
         numCols = LEN_PLIST( ELM_PLIST( listA, 1 ) );
         buildst << numRows << " " << numCols << "\n";
+
         for( size_t i = 1; i <= numRows; i++ ) {
             rowlist = ELM_PLIST( listA, i );
 

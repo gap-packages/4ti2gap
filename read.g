@@ -5,6 +5,8 @@ if _4ti2_lib <> fail then
     ReadPackage("4ti2gap", "lib/minimize.gi");
     ReadPackage("4ti2gap", "lib/normalform.gi");
     ReadPackage("4ti2gap", "lib/markov.gi");
+    ReadPackage("4ti2gap", "lib/walk.gi");
+    ReadPackage("4ti2gap", "lib/zbasis.gi");
     ReadPackage("4ti2gap", "lib/hilbert.gi");
     ReadPackage("4ti2gap", "lib/graver.gi");
     ReadPackage("4ti2gap", "lib/zsolve.gi");

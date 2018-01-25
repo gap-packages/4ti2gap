@@ -1,5 +1,5 @@
 InstallGlobalFunction(MarkovBasis4ti2, function(arg)
-    local matrix, basis, cost, sign, weights, weights_max, _zsol, zsol, narg;
+    local matrix, basis, sign, weights, weights_max, _zsol, zsol, narg;
 
     narg:=Length(arg);
     if narg < 6 then
@@ -18,11 +18,11 @@ InstallGlobalFunction(MarkovBasis4ti2, function(arg)
     weights_max := arg[5];
 
     _zsol := arg[6];
-    if IsRectangularTable(_zsol) then
-        zsol := _zsol;
+    if not(IsList(_zsol)) then 
+        Error("The sixth argument should be a list or a matrix with one row");
     else
-        if not(IsList(_zsol)) then
-            Error("The sixth argument should be a list or a matrix with one row");
+        if _zsol = [] or IsRectangularTable(_zsol) then
+            zsol := _zsol;
         else
             zsol := [_zsol];
         fi;

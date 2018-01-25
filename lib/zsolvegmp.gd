@@ -1,6 +1,6 @@
 #! @Chapter Functions
 #! @Section ZSolve
-#! In this section we show how to interact with <C>zsolve</C> in <C>4ti2<C>
+#! In this section we show how to interact with <C>4ti2<C>'s <C>zsolve</C> 
 
 
 #! @Description

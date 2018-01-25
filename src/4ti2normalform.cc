@@ -102,20 +102,24 @@ Obj _4ti2groebner_Normalform( Obj self, Obj listM, Obj listL, Obj listG, Obj lis
         ErrorQuit("Input data conversion failed for groebner basis.", 0, 0);
     }
 
-    _4ti2_::VectorArray* cost;
-    if ( ! ( cost = _4ti2gap_GAPMatrix4Groebner( listC ) ) ) {
-        if ( matrix ) delete matrix; if ( basis ) delete basis;
-        delete groebner;
-        std::cout.rdbuf( old );
-        ErrorQuit("Input data conversion failed for cost.", 0, 0);
+    _4ti2_::VectorArray* cost = 0;
+    if ( IS_LIST( listC ) && LEN_LIST( listC ) > 0 ) {
+        if ( ! ( cost = _4ti2gap_GAPMatrix4Groebner( listC ) ) ) {
+            if ( matrix ) delete matrix; if ( basis ) delete basis;
+            delete groebner;
+            std::cout.rdbuf( old );
+            ErrorQuit("Input data conversion failed for cost.", 0, 0);
+        }
+        if ( cost->get_number() != 1 || cost->get_size() != dim ) {
+            delete cost;
+            if ( matrix ) delete matrix; if ( basis ) delete basis;
+            delete groebner;
+            std::cout.rdbuf( old );
+            ErrorQuit("Input data cost should be a single cost function, and its size should be matrix/basis compatible.", 0, 0);
+        }
     }
-    if ( cost->get_number() != 1 || cost->get_size() != dim ) {
-        delete cost;
-        if ( matrix ) delete matrix; if ( basis ) delete basis;
-        delete groebner;
-        std::cout.rdbuf( old );
-        ErrorQuit("Input data cost should be a single cost function, and its size should be matrix/basis compatible.", 0, 0);
-    }
+    if (cost == 0)
+        cost = new _4ti2_::VectorArray(0, dim);
 
     _4ti2_::VectorArray *_feas;
     if ( ! ( _feas = _4ti2gap_GAPMatrix4Groebner( listF ) ) ) {

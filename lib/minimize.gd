@@ -1,6 +1,6 @@
 #! @Chapter Functions
 #! @Section Minimize4ti2
-#! In this section we show how to interact with <C>minimize</C> in <C>4ti2<C>
+#! In this section we show how to interact with <C>4ti2<C>'s <C>minimize</C> 
 
 
 #! @Description

@@ -1,6 +1,6 @@
 #! @Chapter Functions
 #! @Section Gröbner bases
-#! In this section we show how to interact with <C>groebner</C> in <C>4ti2<C>
+#! In this section we show how to interact with <C>4ti2<C>'s <C>groebner</C>
 
 
 #! @Description

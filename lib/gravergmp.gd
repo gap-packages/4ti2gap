@@ -1,6 +1,6 @@
 #! @Chapter Functions
 #! @Section Graver bases
-#! In this section we show how to interact with <C>graver</C> in <C>4ti2<C>
+#! In this section we show how to interact with <C>4ti2<C>'s <C>graver<C>
 
 
 #! @Description
