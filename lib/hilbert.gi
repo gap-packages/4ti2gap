@@ -11,9 +11,9 @@ InstallGlobalFunction(HilbertBasis4ti2, function(arg)
         if pos = fail or pos = Length(a) or not( IsValidZSolveInput( a ) ) then
             Error("Input data bad constructed");
         fi;
-        if First(Flat(a[pos+1]),n->GMP_REDUCE(n)<>fail) <> fail then
-            Error("The size of the input suggest to use the GMP version of this function");
-        fi;
+#!        if First(Flat(a[pos+1]),n->GMP_REDUCE(n)<>fail) <> fail then
+#!            Error("The size of the input suggest to use the GMP version of this function");
+#!        fi;
         result:=_4ti2zsolve_Hilbert(a);
         if Length(result)>1 then
             recresult:=rec(zhom:=result[1], zfree:=result[2]);
