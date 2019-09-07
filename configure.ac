@@ -77,55 +77,63 @@ dnl ##
 dnl ## Locate 4ti2
 dnl ##
 
+FTIT_PATH=
+
 AC_ARG_WITH([4ti2],
     [AC_HELP_STRING([--with-4ti2=<path>], [specify root of 4ti2 installation])],
-    [FTIT="$with_4ti2"],
-    [AC_MSG_ERROR([Must use --with-4ti2])]
-)
+    [FTIT_PATH="$with_4ti2"],
+    [
+      AC_MSG_CHECKING([if 4ti2 is installed])
+      BACKUP_LDFLAGS="$LDFLAGS"
+      LDFLAGS="$LDFLAGS -lzsolve"
+      AC_LINK_IFELSE(
+        [AC_LANG_PROGRAM(
+          [[#include <4ti2/4ti2.h>]], 
+          [[_4ti2_state* zsolve_api = _4ti2_zsolve_create_state(_4ti2_PREC_INT_64);]])], 
+        [AC_MSG_RESULT([yes])], 
+        [AC_MSG_ERROR([it seems that it is not installed])])
+      LDFLAGS="$BACKUP_LDFLAGS"
+     ])
 
-FTIT_CPPFLAGS="-I$FTIT/include"
-FTIT_LDPATH="$FTIT/lib"
-FTIT_LDFLAGS="-L$FTIT_LDPATH"
-AC_SUBST(FTIT_LDFLAGS)
-AC_SUBST(FTIT_LDPATH)
-AC_SUBST(FTIT_CPPFLAGS)
+if test "x$FTIT_PATH" != "x"; then
+  FTIT_LDFLAGS="-L$FTIT_PATH/lib"
+  FTIT_CPPFLAGS="-I$FTIT_PATH/include"
+  AC_SUBST(FTIT_LDFLAGS)
+  AC_SUBST(FTIT_CPPFLAGS)
+fi
 
 dnl ##
 dnl ## Locate GMP
 dnl ##
-LB_CHECK_GMP(,[
-if test "${GAP_CPPFLAGS}/gmp" = "${GAP_CPPFLAGS}"; then
-    AC_MSG_WARN([GMP not found. 4ti2gap will be built without support for arbitrary-precision computations.])
-else
-    AC_MSG_WARN([4ti2gap will be built without support for arbitrary-precision computations.])
+LB_CHECK_GMP([],[])
+
+if test "$gmp_found" = "no"; then 
+  AC_MSG_ERROR([GMP is required in order to build 4ti2gap])
 fi
-])
 
 dnl ##
 dnl ## Check if 4ti2 is compiled with GMP
 dnl ##
+gmp4ti2_found="no"
 if test ! -z "${GMP_LIBS}"; then
-    AC_MSG_CHECKING(for GMP support in 4ti2)
-    BACKUP_CPPFLAGS=${CPPFLAGS}
-    BACKUP_LIBS=${LIBS}
-    CPPFLAGS="${CPPFLAGS} ${FTIT_CPPFLAGS} -D_4ti2_GMP_"
-    LIBS="${LIBS} ${FTIT_LDFLAGS} -l4ti2gmp"
-    AC_TRY_LINK(
-    [#include "groebner/VectorArray.h"],
-    [_4ti2_::VectorArray a(2, 2)],[
-        gmp4ti2_found="yes"
-        AC_MSG_RESULT(yes)
-    ],[
-        gmp4ti2_found="no"
-        AC_MSG_RESULT(4ti2 is not capable to manipulate arbitrary precision values. Disabling.)
-    ])
-    CPPFLAGS=${BACKUP_CPPFLAGS}
-    LIBS=${BACKUP_LIBS}
+  AC_MSG_CHECKING(for GMP support in 4ti2)
+  BACKUP_CPPFLAGS=${CPPFLAGS}
+  BACKUP_LIBS=${LIBS}
+  CPPFLAGS="${CPPFLAGS} ${FTIT_CPPFLAGS} -D_4ti2_GMP_"
+  LIBS="${LIBS} ${FTIT_LDFLAGS} -l4ti2gmp"
+  AC_LINK_IFELSE(
+    [AC_LANG_PROGRAM([[#include "groebner/VectorArray.h"]],
+      [[_4ti2_::VectorArray a(2, 2)]])],
+    [gmp4ti2_found="yes"])
+  CPPFLAGS=${BACKUP_CPPFLAGS}
+  LIBS=${BACKUP_LIBS}
 fi
 
-if [test -f "${FTIT}"/bin/4ti2gmp -a "$gmpxx_found" = "no"]; then
-    echo "Mierda"
-    AC_MSG_ERROR([4ti2 is compiled with and GAP is not.])
+AC_EGREP_HEADER([USE_GMP 1],[${GAPROOT}/bin/${GAPARCH}/config.h],
+               [gap_uses_gmp="yes"], [gap_uses_gmp="no"])
+
+if test "$gmp4ti2_found" = "no" -a "$gap_uses_gmp" = "yes"; then
+  AC_MSG_ERROR([GAP uses GMP and 4ti2 is compiled without GMP, this setting will not compile])
 fi
 
 AM_CONDITIONAL([WITH_GMPXX],[test "$gmpxx_found" != "no" -a "$gmp4ti2_found" != "no"])

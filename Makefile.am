@@ -13,7 +13,7 @@ lib_LTLIBRARIES = 4ti2gap.la
 
 4ti2gap_la_SOURCES = src/4ti2files.cc src/4ti2gap.cc src/4ti2groebner.cc src/4ti2minimize.cc src/4ti2normalform.cc src/4ti2markov.cc src/4ti2walk.cc src/4ti2zbasis.cc src/4ti2zsolve.cc src/basicxch.cc src/4ti2daco.cc
 4ti2gap_la_CPPFLAGS = $(GAP_CPPFLAGS) -DCONFIG_H $(FTIT_CPPFLAGS) -std=c++11
-4ti2gap_la_LDFLAGS = -R$(GMP_HOME)/lib -R$(FTIT_LDPATH)
+4ti2gap_la_LDFLAGS = -R$(GMP_HOME)/lib $(FTIT_LDFLAGS)
 4ti2gap_la_LDFLAGS += -module -avoid-version -z
 4ti2gap_la_LIBADD = $(FTIT_LDFLAGS) -lzsolve
 if WITH_GMPXX

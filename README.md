@@ -25,7 +25,7 @@ To run this package you need 4ti2 installed with the components groebner and zso
 
 In case you want to use this package with *hpc-gap*, you should append the option --with-hpcgap, to the `configure` command used in order to build the *4ti2gap* binaries.
 
-In order to use integer multiple precision arithmetic, the library GMP must be installed with the c++ option enabled, and also 4ti2 and GAP should be installed with multiple precision arithmetic enabled. If not, the precision of 4ti2gap will be that of your system architecture.
+The library GMP must be installed with the c++ option enabled, and also 4ti2 and GAP should be installed with multiple precision arithmetic enabled.
 
 If you have GMP and 4ti2 installed in your system, you can try to build 4ti2gap in its folder. The following commands will try to find a GMP installed in /usr or /usr/local. (Note that the installation folders for GAP and 4ti2 should be specified with the appropiate options.)
 
@@ -49,7 +49,7 @@ Then compile 4ti2 with
 	make
 	make install
 
-In some systems 4ti2 does not find the Gnu Linear Programming Kit needed by the groebner component. Adding the path to GLPK to the previous configure command line may help:
+In some systems 4ti2 does not find the GNU Linear Programming Kit needed by the groebner component. Adding the path to GLPK to the previous configure command line may help:
 
 	...$ ./configure --enable-shared --prefix=whereyouwanttoinstall4ti2 --with-gmp=whereyouinstalledgmp --with-glpk=whereglpkisinstalled
 
