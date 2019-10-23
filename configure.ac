@@ -129,10 +129,7 @@ if test ! -z "${GMP_LIBS}"; then
   LIBS=${BACKUP_LIBS}
 fi
 
-AC_EGREP_HEADER([USE_GMP 1],[${GAPROOT}/bin/${GAPARCH}/config.h],
-               [gap_uses_gmp="yes"], [gap_uses_gmp="no"])
-
-if test "$gmp4ti2_found" = "no" -a "$gap_uses_gmp" = "yes"; then
+if test "$gmp4ti2_found" = "no" ; then
   AC_MSG_ERROR([GAP uses GMP and 4ti2 is compiled without GMP, this setting will not compile])
 fi
 
