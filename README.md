@@ -1,3 +1,6 @@
+[![Build Status](https://github.com/gap-packages/4ti2gap/workflows/CI/badge.svg?branch=master)](https://github.com/gap-packages/4ti2gap/actions?query=workflow%3ACI+branch%3Amaster)
+[![Code Coverage](https://codecov.io/github/gap-packages/4ti2gap/coverage.svg?branch=master&token=)](https://codecov.io/gh/gap-packages/4ti2gap)
+
 The GAP 4 package `4ti2gap`
 ===========================
 
