@@ -8,7 +8,7 @@ dnl ##
 AC_PREREQ([2.68])
 AC_INIT([4ti2gap], m4_esyscmd([tr -d '\n' < VERSION]))
 AC_CONFIG_SRCDIR([src/4ti2gap.cc])
-AC_CONFIG_HEADER([src/pkgconfig.h:cnf/pkgconfig.h.in])
+AC_CONFIG_HEADERS([src/pkgconfig.h:cnf/pkgconfig.h.in])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([cnf])
 
@@ -47,10 +47,10 @@ LT_INIT([disable-static dlopen win32-dll])
 dnl ##
 dnl ## Locate the GAP root dir
 dnl ##
-AC_FIND_GAP
+FIND_GAP
 
 AC_ARG_WITH([hpcgap],
-    [AC_HELP_STRING([--with-hpcgap], [to specify that this is hpc-gap version])],
+    [AS_HELP_STRING([--with-hpcgap], [to specify that this is hpc-gap version])],
     [
     for f in $GAPROOT/*hpc; do
         if test -e "$f"; then
@@ -80,7 +80,7 @@ dnl ##
 FTIT_PATH=
 
 AC_ARG_WITH([4ti2],
-    [AC_HELP_STRING([--with-4ti2=<path>], [specify root of 4ti2 installation])],
+    [AS_HELP_STRING([--with-4ti2=<path>], [specify root of 4ti2 installation])],
     [FTIT_PATH="$with_4ti2"],
     [
       AC_MSG_CHECKING([if 4ti2 is installed])
