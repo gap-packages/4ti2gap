@@ -84,15 +84,15 @@ AC_ARG_WITH([4ti2],
     [FTIT_PATH="$with_4ti2"],
     [
       AC_MSG_CHECKING([if 4ti2 is installed])
-      BACKUP_LDFLAGS="$LDFLAGS"
-      LDFLAGS="$LDFLAGS -lzsolve"
+      BACKUP_LIBS="$LIBS"
+      LIBS="$LIBS -lzsolve"
       AC_LINK_IFELSE(
         [AC_LANG_PROGRAM(
           [[#include <4ti2/4ti2.h>]], 
           [[_4ti2_state* zsolve_api = _4ti2_zsolve_create_state(_4ti2_PREC_INT_64);]])], 
         [AC_MSG_RESULT([yes])], 
         [AC_MSG_ERROR([it seems that it is not installed])])
-      LDFLAGS="$BACKUP_LDFLAGS"
+      LIBS="$BACKUP_LIBS"
      ])
 
 if test "x$FTIT_PATH" != "x"; then
