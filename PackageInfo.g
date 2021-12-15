@@ -1,7 +1,7 @@
 SetPackageInfo( rec(
 
 PackageName := "4ti2gap",
-Subtitle := "GAP wraper for 4ti2",
+Subtitle := "GAP wrapper for 4ti2",
 Version := "0.2",
 Date    := "25/01/2018", # dd/mm/yyyy format
 License := "GPL-2.0-or-later",
