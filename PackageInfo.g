@@ -13,7 +13,7 @@ Persons := [
     IsAuthor      := true,
     IsMaintainer  := true,
     Email         := "pedro@ugr.es",
-    WWWHome       := "http://www.ugr.es/local/pedro",
+    WWWHome       := "https://www.ugr.es/local/pedro",
     PostalAddress := Concatenation(
                        "Campus Fuentenueva s/n",
                        "" ),
