@@ -90,6 +90,6 @@ Keywords := [
   "zsolve",
 ],
 
-#TestFile := "tst/testall.g",
+TestFile := "tst/testall.g",
 
 ));
