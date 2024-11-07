@@ -69,14 +69,13 @@ Dependencies := rec(
 ),
 
 AvailabilityTest := function()
-    local path;
-            # test for existence of the compiled binary
-    path := DirectoriesPackagePrograms("4ti2gap");
-    if not "4ti2gap" in SHOW_STAT() and
-       Filename(path, "4ti2gap.so") = fail then
-        return fail;
-    fi;
-    return true;
+  if not IsKernelExtensionAvailable("4ti2gap") then
+    LogPackageLoadingMessage(PACKAGE_WARNING,
+                             ["the kernel module is not compiled, ",
+                              "the package cannot be loaded."]);
+    return false;
+  fi;
+  return true;
 end,
 
 
