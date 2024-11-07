@@ -79,7 +79,6 @@ AvailabilityTest := function()
     return true;
 end,
 
-Autoload := false,
 
 Keywords := [
   "4ti2",
