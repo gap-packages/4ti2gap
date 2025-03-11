@@ -72,11 +72,7 @@ static Int InitLibrary( StructInitInfo *module )
 */
 static StructInitInfo module = {
 #if defined(__GNUC__) || defined(__GNUG__)
-#ifdef FTITSTATIC
-/* type        = */ MODULE_STATIC,
-#else
 /* type        = */ MODULE_DYNAMIC,
-#endif
 /* name        = */ "4ti2gap",
 /* revision_c  = */ 0,
 /* revision_h  = */ 0,
@@ -89,27 +85,15 @@ static StructInitInfo module = {
 /* postSave    = */ 0,
 /* postRestore = */ 0
 #else 
-#ifdef FTITSTATIC
-    .type = MODULE_STATIC,
-#else
     .type = MODULE_DYNAMIC,
-#endif
     .name = "4ti2gap",
     .initKernel = InitKernel,
     .initLibrary = InitLibrary,
 #endif
 };
 
-#ifndef FTITSTATIC
 extern "C"
 StructInitInfo * Init__Dynamic ( void )
 {
   return &module;
-}
-#endif
-
-extern "C"
-StructInitInfo * Init__4ti2 ( void )
-{
-    return &module;
 }
