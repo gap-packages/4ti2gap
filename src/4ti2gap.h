@@ -6,7 +6,7 @@
 #endif
 
 extern "C" {
-#include "compiled.h" // GAP headers
+#include "gap_all.h" // GAP headers
 }
 
 #endif
