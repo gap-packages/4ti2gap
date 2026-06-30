@@ -25,10 +25,10 @@ bool GAPIntTo4ti2( Obj x, Integer &out )
 // From NormalizInterface
 #ifdef _4ti2_INT64_
 template<>
-bool GAPIntTo4ti2(Obj x, _4ti2_int64_t &out)
+bool GAPIntTo4ti2(Obj x, int64_t &out)
 #elif defined(_4ti2_INT32_)
 template<>
-bool GAPIntTo4ti2(Obj x, _4ti2_int32_t &out)
+bool GAPIntTo4ti2(Obj x, int32_t &out)
 #endif
 {
     if (IS_INTOBJ(x)) {
@@ -170,10 +170,10 @@ Obj _4ti2_IntegerType2GAP( Integer x )
 
 #ifdef _4ti2_INT64_
 template<>
-Obj _4ti2_IntegerType2GAP( _4ti2_int64_t x )
+Obj _4ti2_IntegerType2GAP( int64_t x )
 #elif defined(_4ti2_INT32_)
 template<>
-Obj _4ti2_IntegerType2GAP( _4ti2_int32_t x )
+Obj _4ti2_IntegerType2GAP( int32_t x )
 #endif
 {
     return ObjInt_Int(x);
@@ -261,16 +261,16 @@ bool buildZSolveProblem( Obj list, _4ti2_zsolve_::ZSolveAPI<Integer> &problem )
 
 #ifdef _4ti2_INT64_
 template<>
-bool buildZSolveProblem( Obj list, _4ti2_zsolve_::ZSolveAPI<_4ti2_int64_t> &problem )
+bool buildZSolveProblem( Obj list, _4ti2_zsolve_::ZSolveAPI<int64_t> &problem )
 #elif defined(_4ti2_INT32_) 
 template<>
-bool buildZSolveProblem( Obj list, _4ti2_zsolve_::ZSolveAPI<_4ti2_int32_t> &problem )
+bool buildZSolveProblem( Obj list, _4ti2_zsolve_::ZSolveAPI<int32_t> &problem )
 #endif
 {
 #ifdef _4ti2_INT64_    
-    if ( getZSolveInput<_4ti2_int64_t>( list, problem ) ) {
+    if ( getZSolveInput<int64_t>( list, problem ) ) {
 #elif defined(_4ti2_INT32_)
-    if ( getZSolveInput<_4ti2_int32_t>( list, problem ) ) {
+    if ( getZSolveInput<int32_t>( list, problem ) ) {
 #endif
         char arg1[]="-q";
 #ifdef _4ti2_INT64_
@@ -347,9 +347,9 @@ Obj _4ti2_zsolve_HilbertResult2GAP( _4ti2_zsolve_::HilbertAPI<Integer>& problem 
 Obj _4ti2zsolve_Hilbert( Obj self, Obj list )
 {
 #ifdef _4ti2_INT64_
-    _4ti2_zsolve_::HilbertAPI<_4ti2_int64_t> problem;
+    _4ti2_zsolve_::HilbertAPI<int64_t> problem;
 #elif defined(_4ti2_INT32_)
-    _4ti2_zsolve_::HilbertAPI<_4ti2_int32_t> problem;
+    _4ti2_zsolve_::HilbertAPI<int32_t> problem;
 #endif
 
     if ( !buildZSolveProblem( list, problem ) ) {
@@ -371,9 +371,9 @@ Obj _4ti2zsolve_Hilbert( Obj self, Obj list )
     }
 
 #ifdef _4ti2_INT64_
-    return _4ti2_zsolve_HilbertResult2GAP<_4ti2_int64_t>( problem ); 
+    return _4ti2_zsolve_HilbertResult2GAP<int64_t>( problem ); 
 #elif defined(_4ti2_INT32_)
-    return _4ti2_zsolve_HilbertResult2GAP<_4ti2_int32_t>( problem ); 
+    return _4ti2_zsolve_HilbertResult2GAP<int32_t>( problem ); 
 #endif
 }
 
@@ -408,9 +408,9 @@ Obj _4ti2zsolve_HilbertGMP( Obj self, Obj list )
 Obj _4ti2zsolve_Graver( Obj self, Obj list )
 {
 #ifdef _4ti2_INT64_
-    _4ti2_zsolve_::GraverAPI<_4ti2_int64_t> problem;
+    _4ti2_zsolve_::GraverAPI<int64_t> problem;
 #elif defined(_4ti2_INT32_)
-    _4ti2_zsolve_::GraverAPI<_4ti2_int32_t> problem;
+    _4ti2_zsolve_::GraverAPI<int32_t> problem;
 #endif
 
     if ( !buildZSolveProblem( list, problem ) ) {
@@ -432,11 +432,11 @@ Obj _4ti2zsolve_Graver( Obj self, Obj list )
     }
 
 #ifdef _4ti2_INT64_
-    _4ti2_zsolve_::VectorArrayAPI<_4ti2_int64_t> *grabas =  (_4ti2_zsolve_::VectorArrayAPI<_4ti2_int64_t> *) problem.get_matrix( "gra" );
-    return _4ti2_zsolve_VectorArrayAPI2GAP<_4ti2_int64_t>( *grabas ); 
+    _4ti2_zsolve_::VectorArrayAPI<int64_t> *grabas =  (_4ti2_zsolve_::VectorArrayAPI<int64_t> *) problem.get_matrix( "gra" );
+    return _4ti2_zsolve_VectorArrayAPI2GAP<int64_t>( *grabas ); 
 #elif defined(_4ti2_INT32_)
-    _4ti2_zsolve_::VectorArrayAPI<_4ti2_int32_t> *grabas =  (_4ti2_zsolve_::VectorArrayAPI<_4ti2_int32_t> *) problem.get_matrix( "gra" );
-    return _4ti2_zsolve_VectorArrayAPI2GAP<_4ti2_int32_t>( *grabas ); 
+    _4ti2_zsolve_::VectorArrayAPI<int32_t> *grabas =  (_4ti2_zsolve_::VectorArrayAPI<int32_t> *) problem.get_matrix( "gra" );
+    return _4ti2_zsolve_VectorArrayAPI2GAP<int32_t>( *grabas ); 
 #endif
 }
 
@@ -517,9 +517,9 @@ Obj _4ti2_zsolve_ZSolveResult2GAP( _4ti2_zsolve_::ZSolveAPI<Integer>& problem )
 Obj _4ti2zsolve_ZSolve( Obj self, Obj list )
 {
 #ifdef _4ti2_INT64_
-    _4ti2_zsolve_::ZSolveAPI<_4ti2_int64_t> problem;
+    _4ti2_zsolve_::ZSolveAPI<int64_t> problem;
 #elif defined(_4ti2_INT32_)
-    _4ti2_zsolve_::ZSolveAPI<_4ti2_int32_t> problem;
+    _4ti2_zsolve_::ZSolveAPI<int32_t> problem;
 #endif
 
     if ( !buildZSolveProblem( list, problem ) ) {
@@ -541,9 +541,9 @@ Obj _4ti2zsolve_ZSolve( Obj self, Obj list )
     }
 
 #ifdef _4ti2_INT64_
-    return _4ti2_zsolve_ZSolveResult2GAP<_4ti2_int64_t>( problem ); 
+    return _4ti2_zsolve_ZSolveResult2GAP<int64_t>( problem ); 
 #elif defined(_4ti2_INT32_)
-    return _4ti2_zsolve_ZSolveResult2GAP<_4ti2_int32_t>( problem ); 
+    return _4ti2_zsolve_ZSolveResult2GAP<int32_t>( problem ); 
 #endif
 }
 

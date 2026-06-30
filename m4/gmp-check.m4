@@ -21,9 +21,7 @@ AC_DEFUN([LB_CHECK_GMP],
     [if test "$withval" = yes ; then
       GMP_HOME_PATH="${DEFAULT_CHECKING_PATH}"
     elif test "$withval" = no ; then
-      AC_EGREP_HEADER([USE_GMP 1],[${GAPROOT}/bin/${GAPARCH}/config.h], 
-        AC_MSG_ERROR([GAP uses GMP, this setting will not compile]))
-      GMP_HOME_PATH=
+      AC_MSG_ERROR([GAP uses GMP, this setting will not compile])
     else
       GMP_HOME_PATH="$withval ${DEFAULT_CHECKING_PATH}"
     fi],

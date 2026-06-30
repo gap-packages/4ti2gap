@@ -168,15 +168,6 @@ AC_MSG_ERROR([Architecture detection fail])
 fi
 
 dnl ##
-dnl ## Detect Windows resp. Cygwin
-dnl ##
-case $host_os in
-  *cygwin* ) CYGWIN=yes;;
-         * ) CYGWIN=no;;
-esac
-AM_CONDITIONAL([SYS_IS_CYGWIN], [test "$CYGWIN" = "yes"])
-
-dnl ##
 dnl ## Finally, generate the Makefiles and output everything
 dnl ##
 AC_CONFIG_FILES([Makefile])

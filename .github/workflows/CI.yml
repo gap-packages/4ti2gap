@@ -19,42 +19,36 @@ concurrency:
 jobs:
   # The CI test job
   test:
-    name: ${{ matrix.gap-branch }}
+    name: ${{ matrix.gap-version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        gap-branch:
-          - master
-          - stable-4.16
-          - stable-4.15
-          - stable-4.14
-          - stable-4.13
-          - stable-4.12
-          - stable-4.11
-          - stable-4.10
-          - stable-4.9
+        gap-version:
+          - 'devel'
+          - 'latest'
+          - '4.12'
 
     steps:
       - uses: actions/checkout@v6
-      - uses: gap-actions/setup-gap@v2
-        with:
-          GAPBRANCH: ${{ matrix.gap-branch }}
       - name: 'Install additional dependencies'
         run: |
           sudo apt-get install libglpk-dev
-          wget https://github.com/4ti2/4ti2/releases/download/Release_1_6_9/4ti2-1.6.9.tar.gz
-          tar xvf 4ti2-1.6.9.tar.gz
-          cd 4ti2-1.6.9
+          wget https://github.com/4ti2/4ti2/releases/download/Release_1_6_15/4ti2-1.6.15.tar.gz
+          tar xvf 4ti2-1.6.15.tar.gz
+          cd 4ti2-1.6.15
           ./configure --enable-shared --prefix=/usr
           make -j4
           sudo make install
-      - uses: gap-actions/build-pkg@v1
-      - uses: gap-actions/run-pkg-tests@v3
-      - uses: gap-actions/run-pkg-tests@v3
+      - uses: gap-actions/setup-gap@v3
         with:
-          only-needed: true
-      - uses: gap-actions/process-coverage@v2
+          gap-version: ${{ matrix.gap-version }}
+      - uses: gap-actions/build-pkg@v3
+      - uses: gap-actions/run-pkg-tests@v4
+      - uses: gap-actions/run-pkg-tests@v4
+        with:
+          mode: onlyneeded
+      - uses: gap-actions/process-coverage@v3
       - uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
