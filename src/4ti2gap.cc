@@ -8,12 +8,10 @@
 #include "4ti2zbasis.h"
 #include "4ti2zsolve.h"
 
-typedef Obj (* GVarFunc_4ti2gap)(/*arguments*/);
-
 #define GVAR_FUNC_TABLE_ENTRY(srcfile, name, nparam, params) \
   {#name, nparam, \
    params, \
-   (GVarFunc_4ti2gap)name, \
+   (ObjFunc)name, \
    srcfile ":Func" #name }
 
 // Table of functions to export
