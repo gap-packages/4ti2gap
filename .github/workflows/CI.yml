@@ -34,9 +34,9 @@ jobs:
       - name: 'Install additional dependencies'
         run: |
           sudo apt-get install libglpk-dev
-          wget https://github.com/4ti2/4ti2/releases/download/Release_1_6_9/4ti2-1.6.9.tar.gz
-          tar xvf 4ti2-1.6.9.tar.gz
-          cd 4ti2-1.6.9
+          wget https://github.com/4ti2/4ti2/releases/download/Release_1_6_15/4ti2-1.6.15.tar.gz
+          tar xvf 4ti2-1.6.15.tar.gz
+          cd 4ti2-1.6.15
           ./configure --enable-shared --prefix=/usr
           make -j4
           sudo make install
