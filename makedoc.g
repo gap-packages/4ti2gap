@@ -6,6 +6,5 @@ if fail = LoadPackage("AutoDoc", ">= 2016.01.21") then
 fi;
 
 AutoDoc();
-PrintTo("VERSION", GAPInfo.PackageInfoCurrent.Version);
 
 QUIT;
