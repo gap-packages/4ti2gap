@@ -219,7 +219,7 @@ gap> ZBasis4ti2([[15, 4, 14, 19, 2, 1, 10, 17], [18, 11, 13, 5, 16, 16, 8, 19], 
 
 ### Hilbert bases
 
-hilbert actually only returns the homogenous output. It is called in the following way:
+hilbert actually only returns the homogeneous output. It is called in the following way:
 
 `HilbertBasis4ti2( problem )`, where problem is a list to specify the input components of the "problem" (see the 4ti2 manual):
 
@@ -253,7 +253,7 @@ If GMP is installed, `HilbertBasis4ti2gmp( problem )` uses integer multiple prec
 
 ### Graver bases
 
-graver actually only returns the homogenous output. It is called in the following way:
+graver actually only returns the homogeneous output. It is called in the following way:
 GraverBasis4ti2( problem ), where problem is a list to specify the input components of the "problem" (see the 4ti2 manual):
 
 ```gap
